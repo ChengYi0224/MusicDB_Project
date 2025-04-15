@@ -2,7 +2,7 @@
 1. 加入GitHub!!!
 2. 討論開發順序
 3. 專案資料夾介紹
-5. Flask基本常識
+4. Flask基本常識
 
 ## #1 GitHub 儲存庫連結
 https://github.com/ChengYi0224/MusicDB_Project
