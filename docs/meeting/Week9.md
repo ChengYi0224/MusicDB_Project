@@ -49,7 +49,32 @@ from flask import Flask
         return render_template('index.html') #這是使用html的寫法
 @app.route('/user/<name>')
     def search(name):
-        return f"This is {name}'s profile"#直接輸出格式化字串的寫法
+        return f"This is {name}'s profile" #直接輸出格式化字串的寫法
+```
+
+### 3. 模組化我們的功能
+Flask有一個功能叫做「**藍圖(Blueprint)**」，我們可以把各個不同的功能**放到不同的藍圖**
+
+範例:把`app/profile`和`app/player`放在不同的藍圖
+```python
+from flask import Flask
+
+app = Flask(__name__)
+
+player_bp = Blueprint('player', __name__, url_prefix='/player')
+profile_bp = Blueprint('profile', __name__, url_prefix='/profile')
+
+@player_bp.route('/')
+def player_home():
+    return "這是播放模組的首頁"
+
+@profile_bp.route('/')
+def profile_home():
+    return "這是個人檔案模組的首頁"
+
+# 註冊藍圖到主應用
+app.register_blueprint(player_bp)
+app.register_blueprint(profile_bp)
 ```
 
 ## 其他：虛擬環境&執行程式
