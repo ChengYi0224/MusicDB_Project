@@ -1,0 +1,1764 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json",
+  "version": "3.0.0",
+  "settings": {
+    "width": 2000,
+    "height": 2000,
+    "scrollTop": -1056.2256,
+    "scrollLeft": -370.9751,
+    "zoomLevel": 0.61,
+    "show": 431,
+    "database": 4,
+    "databaseName": "db_app",
+    "canvasType": "ERD",
+    "language": 1,
+    "tableNameCase": 4,
+    "columnNameCase": 2,
+    "bracketType": 1,
+    "relationshipDataTypeSync": true,
+    "relationshipOptimization": false,
+    "columnOrder": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64
+    ],
+    "maxWidthComment": -1,
+    "ignoreSaveSettings": 0
+  },
+  "doc": {
+    "tableIds": [
+      "vgVfdHSFIclMZUxdJKvux",
+      "SpOBa0rRGUDeM_2jtN5nX",
+      "U-q5ovT6zCNLvDxJAoKXw",
+      "yaDnG6WhmxYj0ezAEBYjw",
+      "V4JEEANLjLH6JfllYsGua",
+      "uJRnXdReMsuTJBan9J_sl",
+      "NE3YycBVFyOUHBHOPBVhU",
+      "DNCF_jNlrCxY34r_TQZwy",
+      "suAYRJExpdkc90i0CIilm",
+      "qudpcLmWMa6x97ilfZ17w"
+    ],
+    "relationshipIds": [
+      "FNgQxieqyfTTpBWMJ2cG7",
+      "aY5V55XgWNEDuBJtJm9-k",
+      "PGw2U4p1xt5udAbv2N-_B",
+      "MA8EDUKNHta8-5x5oLHrd",
+      "TvtXPJXoa-gwYbdOj6W_H",
+      "6n3cyRtsCaziqVopRRXxY",
+      "OsIaVS83QA-bn6KsiJCGO",
+      "9VwYNHHRlXeko9Q7ys-fa",
+      "zTnaiwaSiGNDubgPx075v",
+      "tA935LTQTS4qIT7AazOAq",
+      "Di7O9ikdNtAU08biWuPXh",
+      "Q02MZmyzCMio6ZwpgjXS1",
+      "-06xqdVj9y1pdp1cAzfLq",
+      "6W-mBnyZCTMkIGMR8vFjV",
+      "vwoCtduSzfWxOE48ZmV_T",
+      "glmkvDOAZGZ5S8lAM6Muc",
+      "zmjUH-6mC-KjrYZDOHQ3A"
+    ],
+    "indexIds": [],
+    "memoIds": []
+  },
+  "collections": {
+    "tableEntities": {
+      "vgVfdHSFIclMZUxdJKvux": {
+        "id": "vgVfdHSFIclMZUxdJKvux",
+        "name": "albums",
+        "comment": "",
+        "columnIds": [
+          "mDOqaDky3Q8n-FhU4pHQP",
+          "7-C7KFmumTJzzbQGkYSm8",
+          "ZErfTkCF82sWXuvNs3G1C",
+          "ehcdvZkei32JGWVzbvY3j",
+          "axoxQT0WLdajUF6byyllj"
+        ],
+        "seqColumnIds": [
+          "mDOqaDky3Q8n-FhU4pHQP",
+          "7-C7KFmumTJzzbQGkYSm8",
+          "ZErfTkCF82sWXuvNs3G1C",
+          "ehcdvZkei32JGWVzbvY3j",
+          "axoxQT0WLdajUF6byyllj"
+        ],
+        "ui": {
+          "x": 584.275429741967,
+          "y": 494.29803457407536,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1745913563011,
+          "createAt": 1745913552905
+        }
+      },
+      "SpOBa0rRGUDeM_2jtN5nX": {
+        "id": "SpOBa0rRGUDeM_2jtN5nX",
+        "name": "album_songs",
+        "comment": "",
+        "columnIds": [
+          "eUq3UhOwc_T6lB4fp6nyT",
+          "3CQD329ysHNYsyFiCYX6S",
+          "-j8zsX1Y9wTOGL264dJG9"
+        ],
+        "seqColumnIds": [
+          "eUq3UhOwc_T6lB4fp6nyT",
+          "3CQD329ysHNYsyFiCYX6S",
+          "-j8zsX1Y9wTOGL264dJG9"
+        ],
+        "ui": {
+          "x": 1155.1717,
+          "y": 499.7869,
+          "zIndex": 2,
+          "widthName": 71,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1745913833426,
+          "createAt": 1745913552906
+        }
+      },
+      "U-q5ovT6zCNLvDxJAoKXw": {
+        "id": "U-q5ovT6zCNLvDxJAoKXw",
+        "name": "songs",
+        "comment": "",
+        "columnIds": [
+          "ESRgP6d7cv5Qy1s6ND7uV",
+          "EZcqqdMcujN2I50h8b7Bu",
+          "G2qYeAjSvbCldWGPnbTN_",
+          "Map59PUSkBRuTJI-WebIb",
+          "7RQ_DRLu-Lknj44t2zILG",
+          "kNZriGxfnM-Qi8ocbjqxr",
+          "aWNpA6YZKF30n58AkpsRU"
+        ],
+        "seqColumnIds": [
+          "ESRgP6d7cv5Qy1s6ND7uV",
+          "EZcqqdMcujN2I50h8b7Bu",
+          "G2qYeAjSvbCldWGPnbTN_",
+          "Map59PUSkBRuTJI-WebIb",
+          "7RQ_DRLu-Lknj44t2zILG",
+          "kNZriGxfnM-Qi8ocbjqxr",
+          "aWNpA6YZKF30n58AkpsRU"
+        ],
+        "ui": {
+          "x": 878.3615270568162,
+          "y": 882.8504498683485,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1745913563011,
+          "createAt": 1745913552906
+        }
+      },
+      "yaDnG6WhmxYj0ezAEBYjw": {
+        "id": "yaDnG6WhmxYj0ezAEBYjw",
+        "name": "users",
+        "comment": "",
+        "columnIds": [
+          "o2jIgoMElWFU4UEWCiX3h",
+          "fV1QXQQZoFvqS6sjLHSag",
+          "NDfgOhPcadOTpsyQNXMey",
+          "fE60PaWwUjw6kKVpVmAnm",
+          "JVysC9XoJgC4MY4by0qLd",
+          "jPmCROilyPvRI-89hTGXA",
+          "IOXjq81G1k-YnVd1pJM0R",
+          "T27YUPZufOWKNu7O-lUbc"
+        ],
+        "seqColumnIds": [
+          "o2jIgoMElWFU4UEWCiX3h",
+          "fV1QXQQZoFvqS6sjLHSag",
+          "NDfgOhPcadOTpsyQNXMey",
+          "fE60PaWwUjw6kKVpVmAnm",
+          "JVysC9XoJgC4MY4by0qLd",
+          "jPmCROilyPvRI-89hTGXA",
+          "IOXjq81G1k-YnVd1pJM0R",
+          "T27YUPZufOWKNu7O-lUbc"
+        ],
+        "ui": {
+          "x": 699.5554,
+          "y": 1314.9203,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1745913826599,
+          "createAt": 1745913552907
+        }
+      },
+      "V4JEEANLjLH6JfllYsGua": {
+        "id": "V4JEEANLjLH6JfllYsGua",
+        "name": "playlists",
+        "comment": "",
+        "columnIds": [
+          "B6Gtv2OWr3EyRrAI3YUDx",
+          "hSqy_bIDnfaQQrdAOpitV",
+          "4fdVDRBeAiEM3460LIImD",
+          "okTEanuj0HOXsE99PuZll"
+        ],
+        "seqColumnIds": [
+          "B6Gtv2OWr3EyRrAI3YUDx",
+          "hSqy_bIDnfaQQrdAOpitV",
+          "4fdVDRBeAiEM3460LIImD",
+          "okTEanuj0HOXsE99PuZll"
+        ],
+        "ui": {
+          "x": 1045.0973484162755,
+          "y": 1759.4226977794099,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1745913563011,
+          "createAt": 1745913552907
+        }
+      },
+      "uJRnXdReMsuTJBan9J_sl": {
+        "id": "uJRnXdReMsuTJBan9J_sl",
+        "name": "playlist_songs",
+        "comment": "",
+        "columnIds": [
+          "BGxqYxQX1enAZ94maoFxi",
+          "J_Kp-W-y_dLAlLBcMS7XW",
+          "nnExNmc5g4hlirUMqNoXy",
+          "AbNhUTkYk_JoZkKk41MAC"
+        ],
+        "seqColumnIds": [
+          "BGxqYxQX1enAZ94maoFxi",
+          "J_Kp-W-y_dLAlLBcMS7XW",
+          "nnExNmc5g4hlirUMqNoXy",
+          "AbNhUTkYk_JoZkKk41MAC"
+        ],
+        "ui": {
+          "x": 1484.7028,
+          "y": 1124.3549,
+          "zIndex": 2,
+          "widthName": 75,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1745913823218,
+          "createAt": 1745913552907
+        }
+      },
+      "NE3YycBVFyOUHBHOPBVhU": {
+        "id": "NE3YycBVFyOUHBHOPBVhU",
+        "name": "user_history",
+        "comment": "",
+        "columnIds": [
+          "Vj_1wsLj44L_7clFtJqsM",
+          "pteEXsWFrzRa2fhnsxXb-",
+          "OpzZLWToBQZGwZH55wMr8"
+        ],
+        "seqColumnIds": [
+          "Vj_1wsLj44L_7clFtJqsM",
+          "pteEXsWFrzRa2fhnsxXb-",
+          "OpzZLWToBQZGwZH55wMr8"
+        ],
+        "ui": {
+          "x": 1387.9729353419116,
+          "y": 860.6012041593344,
+          "zIndex": 2,
+          "widthName": 65,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1745913563011,
+          "createAt": 1745913552908
+        }
+      },
+      "DNCF_jNlrCxY34r_TQZwy": {
+        "id": "DNCF_jNlrCxY34r_TQZwy",
+        "name": "playback_queue",
+        "comment": "",
+        "columnIds": [
+          "VaMTVWsAUs5jqgr3r4swt",
+          "kqBA8vrQLPy1NEvgLYDfr",
+          "JFx86_XcR7yjtOrDoqstX",
+          "toDf5ZEQkQ-f_k_mHIh-y"
+        ],
+        "seqColumnIds": [
+          "VaMTVWsAUs5jqgr3r4swt",
+          "kqBA8vrQLPy1NEvgLYDfr",
+          "JFx86_XcR7yjtOrDoqstX",
+          "toDf5ZEQkQ-f_k_mHIh-y"
+        ],
+        "ui": {
+          "x": 205.628,
+          "y": 905.2685,
+          "zIndex": 2,
+          "widthName": 87,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1745913813378,
+          "createAt": 1745913552908
+        }
+      },
+      "suAYRJExpdkc90i0CIilm": {
+        "id": "suAYRJExpdkc90i0CIilm",
+        "name": "realtime_playback",
+        "comment": "",
+        "columnIds": [
+          "povqHEV4iUVnS_4YuhiGO",
+          "KYQFBOY1bHfhVm0t6dGrV",
+          "ZOGe81HrORM-59F_DtmHR",
+          "SsH8jV47u9f4yUhRQHpiR"
+        ],
+        "seqColumnIds": [
+          "povqHEV4iUVnS_4YuhiGO",
+          "KYQFBOY1bHfhVm0t6dGrV",
+          "ZOGe81HrORM-59F_DtmHR",
+          "SsH8jV47u9f4yUhRQHpiR"
+        ],
+        "ui": {
+          "x": 21.4185,
+          "y": 1364.4148,
+          "zIndex": 2,
+          "widthName": 97,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1745913806508,
+          "createAt": 1745913552908
+        }
+      },
+      "qudpcLmWMa6x97ilfZ17w": {
+        "id": "qudpcLmWMa6x97ilfZ17w",
+        "name": "playlist_collaborators",
+        "comment": "",
+        "columnIds": [
+          "xhRv98JjcfqW9EoWPSbai",
+          "-Y5pS5Sn2bGUuMFj8Cku3",
+          "6M_aYWAWOUrg-SVhlWLKi"
+        ],
+        "seqColumnIds": [
+          "xhRv98JjcfqW9EoWPSbai",
+          "-Y5pS5Sn2bGUuMFj8Cku3",
+          "6M_aYWAWOUrg-SVhlWLKi"
+        ],
+        "ui": {
+          "x": 26.5735,
+          "y": 600.8034,
+          "zIndex": 2,
+          "widthName": 113,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1745913835951,
+          "createAt": 1745913552908
+        }
+      }
+    },
+    "tableColumnEntities": {
+      "mDOqaDky3Q8n-FhU4pHQP": {
+        "id": "mDOqaDky3Q8n-FhU4pHQP",
+        "tableId": "vgVfdHSFIclMZUxdJKvux",
+        "name": "album_id",
+        "comment": "專輯ID",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552906,
+          "createAt": 1745913552906
+        }
+      },
+      "7-C7KFmumTJzzbQGkYSm8": {
+        "id": "7-C7KFmumTJzzbQGkYSm8",
+        "tableId": "vgVfdHSFIclMZUxdJKvux",
+        "name": "title",
+        "comment": "專輯名稱",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552906,
+          "createAt": 1745913552906
+        }
+      },
+      "ZErfTkCF82sWXuvNs3G1C": {
+        "id": "ZErfTkCF82sWXuvNs3G1C",
+        "tableId": "vgVfdHSFIclMZUxdJKvux",
+        "name": "user_id",
+        "comment": "歌手ID",
+        "dataType": "INT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552906,
+          "createAt": 1745913552906
+        }
+      },
+      "ehcdvZkei32JGWVzbvY3j": {
+        "id": "ehcdvZkei32JGWVzbvY3j",
+        "tableId": "vgVfdHSFIclMZUxdJKvux",
+        "name": "cover_url",
+        "comment": "專輯封面路徑",
+        "dataType": "TEXT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 74,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552906,
+          "createAt": 1745913552906
+        }
+      },
+      "axoxQT0WLdajUF6byyllj": {
+        "id": "axoxQT0WLdajUF6byyllj",
+        "tableId": "vgVfdHSFIclMZUxdJKvux",
+        "name": "release_data",
+        "comment": "建立時間",
+        "dataType": "DATETIME",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 67,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552906,
+          "createAt": 1745913552906
+        }
+      },
+      "eUq3UhOwc_T6lB4fp6nyT": {
+        "id": "eUq3UhOwc_T6lB4fp6nyT",
+        "tableId": "SpOBa0rRGUDeM_2jtN5nX",
+        "name": "album_id",
+        "comment": "專輯ID",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 3,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552906,
+          "createAt": 1745913552906
+        }
+      },
+      "3CQD329ysHNYsyFiCYX6S": {
+        "id": "3CQD329ysHNYsyFiCYX6S",
+        "tableId": "SpOBa0rRGUDeM_2jtN5nX",
+        "name": "song_id",
+        "comment": "歌曲ID",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 3,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552906,
+          "createAt": 1745913552906
+        }
+      },
+      "-j8zsX1Y9wTOGL264dJG9": {
+        "id": "-j8zsX1Y9wTOGL264dJG9",
+        "tableId": "SpOBa0rRGUDeM_2jtN5nX",
+        "name": "track_num",
+        "comment": "專輯中的第幾首",
+        "dataType": "INT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 86,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552906,
+          "createAt": 1745913552906
+        }
+      },
+      "ESRgP6d7cv5Qy1s6ND7uV": {
+        "id": "ESRgP6d7cv5Qy1s6ND7uV",
+        "tableId": "U-q5ovT6zCNLvDxJAoKXw",
+        "name": "song_id",
+        "comment": "歌曲ID",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552906,
+          "createAt": 1745913552906
+        }
+      },
+      "EZcqqdMcujN2I50h8b7Bu": {
+        "id": "EZcqqdMcujN2I50h8b7Bu",
+        "tableId": "U-q5ovT6zCNLvDxJAoKXw",
+        "name": "title",
+        "comment": "歌曲名稱",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552906,
+          "createAt": 1745913552906
+        }
+      },
+      "G2qYeAjSvbCldWGPnbTN_": {
+        "id": "G2qYeAjSvbCldWGPnbTN_",
+        "tableId": "U-q5ovT6zCNLvDxJAoKXw",
+        "name": "user_id",
+        "comment": "歌手ID",
+        "dataType": "INT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552906,
+          "createAt": 1745913552906
+        }
+      },
+      "Map59PUSkBRuTJI-WebIb": {
+        "id": "Map59PUSkBRuTJI-WebIb",
+        "tableId": "U-q5ovT6zCNLvDxJAoKXw",
+        "name": "duration",
+        "comment": "長度",
+        "dataType": "INT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552906,
+          "createAt": 1745913552906
+        }
+      },
+      "7RQ_DRLu-Lknj44t2zILG": {
+        "id": "7RQ_DRLu-Lknj44t2zILG",
+        "tableId": "U-q5ovT6zCNLvDxJAoKXw",
+        "name": "file_url",
+        "comment": "音樂檔案路徑",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 74,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552906,
+          "createAt": 1745913552906
+        }
+      },
+      "kNZriGxfnM-Qi8ocbjqxr": {
+        "id": "kNZriGxfnM-Qi8ocbjqxr",
+        "tableId": "U-q5ovT6zCNLvDxJAoKXw",
+        "name": "is_public",
+        "comment": "是否公開",
+        "dataType": "BOOLEAN",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "aWNpA6YZKF30n58AkpsRU": {
+        "id": "aWNpA6YZKF30n58AkpsRU",
+        "tableId": "U-q5ovT6zCNLvDxJAoKXw",
+        "name": "album_id",
+        "comment": "專輯ID",
+        "dataType": "INT",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "o2jIgoMElWFU4UEWCiX3h": {
+        "id": "o2jIgoMElWFU4UEWCiX3h",
+        "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+        "name": "user_id",
+        "comment": "使用者ID",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "fV1QXQQZoFvqS6sjLHSag": {
+        "id": "fV1QXQQZoFvqS6sjLHSag",
+        "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+        "name": "username",
+        "comment": "帳號",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "NDfgOhPcadOTpsyQNXMey": {
+        "id": "NDfgOhPcadOTpsyQNXMey",
+        "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+        "name": "description",
+        "comment": "簡介",
+        "dataType": "TEXT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 61,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "fE60PaWwUjw6kKVpVmAnm": {
+        "id": "fE60PaWwUjw6kKVpVmAnm",
+        "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+        "name": "email",
+        "comment": "信箱",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "JVysC9XoJgC4MY4by0qLd": {
+        "id": "JVysC9XoJgC4MY4by0qLd",
+        "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+        "name": "password_hash",
+        "comment": "密碼HASH",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 82,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "jPmCROilyPvRI-89hTGXA": {
+        "id": "jPmCROilyPvRI-89hTGXA",
+        "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+        "name": "role",
+        "comment": "權限角色",
+        "dataType": "ENUM(user,admin,moderator)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 160,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913662605,
+          "createAt": 1745913552907
+        }
+      },
+      "IOXjq81G1k-YnVd1pJM0R": {
+        "id": "IOXjq81G1k-YnVd1pJM0R",
+        "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+        "name": "profile_image",
+        "comment": "頭像",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 74,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "T27YUPZufOWKNu7O-lUbc": {
+        "id": "T27YUPZufOWKNu7O-lUbc",
+        "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+        "name": "created_at",
+        "comment": "註冊時間",
+        "dataType": "DATETIME",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "B6Gtv2OWr3EyRrAI3YUDx": {
+        "id": "B6Gtv2OWr3EyRrAI3YUDx",
+        "tableId": "V4JEEANLjLH6JfllYsGua",
+        "name": "playlist_id",
+        "comment": "歌單ID",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "hSqy_bIDnfaQQrdAOpitV": {
+        "id": "hSqy_bIDnfaQQrdAOpitV",
+        "tableId": "V4JEEANLjLH6JfllYsGua",
+        "name": "user_id",
+        "comment": "建立者ID",
+        "dataType": "INT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "4fdVDRBeAiEM3460LIImD": {
+        "id": "4fdVDRBeAiEM3460LIImD",
+        "tableId": "V4JEEANLjLH6JfllYsGua",
+        "name": "title",
+        "comment": "歌單名稱",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "okTEanuj0HOXsE99PuZll": {
+        "id": "okTEanuj0HOXsE99PuZll",
+        "tableId": "V4JEEANLjLH6JfllYsGua",
+        "name": "is_public",
+        "comment": "是否公開",
+        "dataType": "BOOLEAN",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "BGxqYxQX1enAZ94maoFxi": {
+        "id": "BGxqYxQX1enAZ94maoFxi",
+        "tableId": "uJRnXdReMsuTJBan9J_sl",
+        "name": "playlist_id",
+        "comment": "歌單ID，FK",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 3,
+          "widthName": 60,
+          "widthComment": 62,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "J_Kp-W-y_dLAlLBcMS7XW": {
+        "id": "J_Kp-W-y_dLAlLBcMS7XW",
+        "tableId": "uJRnXdReMsuTJBan9J_sl",
+        "name": "song_id",
+        "comment": "歌曲ID，FK",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 3,
+          "widthName": 60,
+          "widthComment": 62,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "nnExNmc5g4hlirUMqNoXy": {
+        "id": "nnExNmc5g4hlirUMqNoXy",
+        "tableId": "uJRnXdReMsuTJBan9J_sl",
+        "name": "track_num",
+        "comment": "歌曲在歌單中的排序位置",
+        "dataType": "INT",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 134,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552907,
+          "createAt": 1745913552907
+        }
+      },
+      "AbNhUTkYk_JoZkKk41MAC": {
+        "id": "AbNhUTkYk_JoZkKk41MAC",
+        "tableId": "uJRnXdReMsuTJBan9J_sl",
+        "name": "added_by",
+        "comment": "加入歌曲的使用者ID，FK",
+        "dataType": "INT",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 134,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "Vj_1wsLj44L_7clFtJqsM": {
+        "id": "Vj_1wsLj44L_7clFtJqsM",
+        "tableId": "NE3YycBVFyOUHBHOPBVhU",
+        "name": "user_id",
+        "comment": "使用者ID，PK，FK",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 3,
+          "widthName": 60,
+          "widthComment": 100,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "pteEXsWFrzRa2fhnsxXb-": {
+        "id": "pteEXsWFrzRa2fhnsxXb-",
+        "tableId": "NE3YycBVFyOUHBHOPBVhU",
+        "name": "song_id",
+        "comment": "歌曲ID，FK",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 3,
+          "widthName": 60,
+          "widthComment": 62,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "OpzZLWToBQZGwZH55wMr8": {
+        "id": "OpzZLWToBQZGwZH55wMr8",
+        "tableId": "NE3YycBVFyOUHBHOPBVhU",
+        "name": "timestamp",
+        "comment": "播放時間",
+        "dataType": "DATETIME",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "VaMTVWsAUs5jqgr3r4swt": {
+        "id": "VaMTVWsAUs5jqgr3r4swt",
+        "tableId": "DNCF_jNlrCxY34r_TQZwy",
+        "name": "queue_id",
+        "comment": "播放佇列ID，PK",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 87,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "kqBA8vrQLPy1NEvgLYDfr": {
+        "id": "kqBA8vrQLPy1NEvgLYDfr",
+        "tableId": "DNCF_jNlrCxY34r_TQZwy",
+        "name": "user_id",
+        "comment": "建立者ID，FK",
+        "dataType": "INT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 74,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "JFx86_XcR7yjtOrDoqstX": {
+        "id": "JFx86_XcR7yjtOrDoqstX",
+        "tableId": "DNCF_jNlrCxY34r_TQZwy",
+        "name": "song_id",
+        "comment": "歌曲ID，FK",
+        "dataType": "INT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 62,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "toDf5ZEQkQ-f_k_mHIh-y": {
+        "id": "toDf5ZEQkQ-f_k_mHIh-y",
+        "tableId": "DNCF_jNlrCxY34r_TQZwy",
+        "name": "track_num",
+        "comment": "歌曲序數",
+        "dataType": "INT",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "povqHEV4iUVnS_4YuhiGO": {
+        "id": "povqHEV4iUVnS_4YuhiGO",
+        "tableId": "suAYRJExpdkc90i0CIilm",
+        "name": "queue_id",
+        "comment": "播放佇列ID，PK",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 3,
+          "widthName": 60,
+          "widthComment": 87,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "KYQFBOY1bHfhVm0t6dGrV": {
+        "id": "KYQFBOY1bHfhVm0t6dGrV",
+        "tableId": "suAYRJExpdkc90i0CIilm",
+        "name": "user_id",
+        "comment": "使用者ID，PK，FK",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 3,
+          "widthName": 60,
+          "widthComment": 100,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "ZOGe81HrORM-59F_DtmHR": {
+        "id": "ZOGe81HrORM-59F_DtmHR",
+        "tableId": "suAYRJExpdkc90i0CIilm",
+        "name": "position",
+        "comment": "目前播放到第幾首歌",
+        "dataType": "INT",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 110,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "SsH8jV47u9f4yUhRQHpiR": {
+        "id": "SsH8jV47u9f4yUhRQHpiR",
+        "tableId": "suAYRJExpdkc90i0CIilm",
+        "name": "started_at",
+        "comment": "開始播放歌曲的時間，用來同步播放狀態",
+        "dataType": "TIMESTAMP",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 218,
+          "widthDataType": 65,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "xhRv98JjcfqW9EoWPSbai": {
+        "id": "xhRv98JjcfqW9EoWPSbai",
+        "tableId": "qudpcLmWMa6x97ilfZ17w",
+        "name": "queue_id",
+        "comment": "播放佇列ID，PK，FK",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 3,
+          "widthName": 60,
+          "widthComment": 112,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "-Y5pS5Sn2bGUuMFj8Cku3": {
+        "id": "-Y5pS5Sn2bGUuMFj8Cku3",
+        "tableId": "qudpcLmWMa6x97ilfZ17w",
+        "name": "user_id",
+        "comment": "共編使用者ID，PK，FK",
+        "dataType": "INT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 3,
+          "widthName": 60,
+          "widthComment": 124,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "6M_aYWAWOUrg-SVhlWLKi": {
+        "id": "6M_aYWAWOUrg-SVhlWLKi",
+        "tableId": "qudpcLmWMa6x97ilfZ17w",
+        "name": "permission",
+        "comment": "權限類型",
+        "dataType": "ENUM(edit,view)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 90,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      }
+    },
+    "relationshipEntities": {
+      "FNgQxieqyfTTpBWMJ2cG7": {
+        "id": "FNgQxieqyfTTpBWMJ2cG7",
+        "identification": false,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+          "columnIds": [
+            "o2jIgoMElWFU4UEWCiX3h"
+          ],
+          "x": 943.0554000000001,
+          "y": 1314.9203,
+          "direction": 4
+        },
+        "end": {
+          "tableId": "vgVfdHSFIclMZUxdJKvux",
+          "columnIds": [
+            "ZErfTkCF82sWXuvNs3G1C"
+          ],
+          "x": 787.775429741967,
+          "y": 670.2980345740754,
+          "direction": 8
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "aY5V55XgWNEDuBJtJm9-k": {
+        "id": "aY5V55XgWNEDuBJtJm9-k",
+        "identification": true,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "vgVfdHSFIclMZUxdJKvux",
+          "columnIds": [
+            "mDOqaDky3Q8n-FhU4pHQP"
+          ],
+          "x": 991.275429741967,
+          "y": 538.2980345740754,
+          "direction": 2
+        },
+        "end": {
+          "tableId": "SpOBa0rRGUDeM_2jtN5nX",
+          "columnIds": [
+            "eUq3UhOwc_T6lB4fp6nyT"
+          ],
+          "x": 1155.1717,
+          "y": 531.7869000000001,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "PGw2U4p1xt5udAbv2N-_B": {
+        "id": "PGw2U4p1xt5udAbv2N-_B",
+        "identification": true,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "U-q5ovT6zCNLvDxJAoKXw",
+          "columnIds": [
+            "ESRgP6d7cv5Qy1s6ND7uV"
+          ],
+          "x": 1178.3615270568162,
+          "y": 882.8504498683485,
+          "direction": 4
+        },
+        "end": {
+          "tableId": "SpOBa0rRGUDeM_2jtN5nX",
+          "columnIds": [
+            "3CQD329ysHNYsyFiCYX6S"
+          ],
+          "x": 1155.1717,
+          "y": 595.7869000000001,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1745913552908,
+          "createAt": 1745913552908
+        }
+      },
+      "MA8EDUKNHta8-5x5oLHrd": {
+        "id": "MA8EDUKNHta8-5x5oLHrd",
+        "identification": false,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+          "columnIds": [
+            "o2jIgoMElWFU4UEWCiX3h"
+          ],
+          "x": 1105.3887333333334,
+          "y": 1314.9203,
+          "direction": 4
+        },
+        "end": {
+          "tableId": "U-q5ovT6zCNLvDxJAoKXw",
+          "columnIds": [
+            "G2qYeAjSvbCldWGPnbTN_"
+          ],
+          "x": 1078.3615270568162,
+          "y": 1106.8504498683485,
+          "direction": 8
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      },
+      "TvtXPJXoa-gwYbdOj6W_H": {
+        "id": "TvtXPJXoa-gwYbdOj6W_H",
+        "identification": false,
+        "relationshipType": 4,
+        "startRelationshipType": 1,
+        "start": {
+          "tableId": "vgVfdHSFIclMZUxdJKvux",
+          "columnIds": [
+            "mDOqaDky3Q8n-FhU4pHQP"
+          ],
+          "x": 991.275429741967,
+          "y": 626.2980345740754,
+          "direction": 2
+        },
+        "end": {
+          "tableId": "U-q5ovT6zCNLvDxJAoKXw",
+          "columnIds": [
+            "aWNpA6YZKF30n58AkpsRU"
+          ],
+          "x": 978.3615270568162,
+          "y": 882.8504498683485,
+          "direction": 4
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      },
+      "6n3cyRtsCaziqVopRRXxY": {
+        "id": "6n3cyRtsCaziqVopRRXxY",
+        "identification": false,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+          "columnIds": [
+            "o2jIgoMElWFU4UEWCiX3h"
+          ],
+          "x": 943.0554,
+          "y": 1562.9203,
+          "direction": 8
+        },
+        "end": {
+          "tableId": "V4JEEANLjLH6JfllYsGua",
+          "columnIds": [
+            "hSqy_bIDnfaQQrdAOpitV"
+          ],
+          "x": 1045.0973484162755,
+          "y": 1835.4226977794099,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      },
+      "OsIaVS83QA-bn6KsiJCGO": {
+        "id": "OsIaVS83QA-bn6KsiJCGO",
+        "identification": true,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "V4JEEANLjLH6JfllYsGua",
+          "columnIds": [
+            "B6Gtv2OWr3EyRrAI3YUDx"
+          ],
+          "x": 1238.0973484162755,
+          "y": 1759.4226977794099,
+          "direction": 4
+        },
+        "end": {
+          "tableId": "uJRnXdReMsuTJBan9J_sl",
+          "columnIds": [
+            "BGxqYxQX1enAZ94maoFxi"
+          ],
+          "x": 1484.7028,
+          "y": 1251.021566666667,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      },
+      "9VwYNHHRlXeko9Q7ys-fa": {
+        "id": "9VwYNHHRlXeko9Q7ys-fa",
+        "identification": true,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "U-q5ovT6zCNLvDxJAoKXw",
+          "columnIds": [
+            "ESRgP6d7cv5Qy1s6ND7uV"
+          ],
+          "x": 1278.3615270568162,
+          "y": 1050.8504498683485,
+          "direction": 2
+        },
+        "end": {
+          "tableId": "uJRnXdReMsuTJBan9J_sl",
+          "columnIds": [
+            "J_Kp-W-y_dLAlLBcMS7XW"
+          ],
+          "x": 1484.7028,
+          "y": 1149.6882333333335,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      },
+      "zTnaiwaSiGNDubgPx075v": {
+        "id": "zTnaiwaSiGNDubgPx075v",
+        "identification": false,
+        "relationshipType": 4,
+        "startRelationshipType": 1,
+        "start": {
+          "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+          "columnIds": [
+            "o2jIgoMElWFU4UEWCiX3h"
+          ],
+          "x": 1186.5554,
+          "y": 1500.9203,
+          "direction": 2
+        },
+        "end": {
+          "tableId": "uJRnXdReMsuTJBan9J_sl",
+          "columnIds": [
+            "AbNhUTkYk_JoZkKk41MAC"
+          ],
+          "x": 1484.7028,
+          "y": 1200.3549000000003,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      },
+      "tA935LTQTS4qIT7AazOAq": {
+        "id": "tA935LTQTS4qIT7AazOAq",
+        "identification": true,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+          "columnIds": [
+            "o2jIgoMElWFU4UEWCiX3h"
+          ],
+          "x": 1186.5554,
+          "y": 1376.9203,
+          "direction": 2
+        },
+        "end": {
+          "tableId": "NE3YycBVFyOUHBHOPBVhU",
+          "columnIds": [
+            "Vj_1wsLj44L_7clFtJqsM"
+          ],
+          "x": 1387.9729353419116,
+          "y": 956.6012041593344,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      },
+      "Di7O9ikdNtAU08biWuPXh": {
+        "id": "Di7O9ikdNtAU08biWuPXh",
+        "identification": true,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "U-q5ovT6zCNLvDxJAoKXw",
+          "columnIds": [
+            "ESRgP6d7cv5Qy1s6ND7uV"
+          ],
+          "x": 1278.3615270568162,
+          "y": 938.8504498683485,
+          "direction": 2
+        },
+        "end": {
+          "tableId": "NE3YycBVFyOUHBHOPBVhU",
+          "columnIds": [
+            "pteEXsWFrzRa2fhnsxXb-"
+          ],
+          "x": 1387.9729353419116,
+          "y": 892.6012041593344,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      },
+      "Q02MZmyzCMio6ZwpgjXS1": {
+        "id": "Q02MZmyzCMio6ZwpgjXS1",
+        "identification": false,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+          "columnIds": [
+            "o2jIgoMElWFU4UEWCiX3h"
+          ],
+          "x": 699.5554,
+          "y": 1376.9203,
+          "direction": 1
+        },
+        "end": {
+          "tableId": "DNCF_jNlrCxY34r_TQZwy",
+          "columnIds": [
+            "kqBA8vrQLPy1NEvgLYDfr"
+          ],
+          "x": 597.6279999999999,
+          "y": 1019.2685,
+          "direction": 2
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      },
+      "-06xqdVj9y1pdp1cAzfLq": {
+        "id": "-06xqdVj9y1pdp1cAzfLq",
+        "identification": false,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "U-q5ovT6zCNLvDxJAoKXw",
+          "columnIds": [
+            "ESRgP6d7cv5Qy1s6ND7uV"
+          ],
+          "x": 878.3615270568162,
+          "y": 994.8504498683485,
+          "direction": 1
+        },
+        "end": {
+          "tableId": "DNCF_jNlrCxY34r_TQZwy",
+          "columnIds": [
+            "JFx86_XcR7yjtOrDoqstX"
+          ],
+          "x": 597.6279999999999,
+          "y": 943.2685,
+          "direction": 2
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      },
+      "6W-mBnyZCTMkIGMR8vFjV": {
+        "id": "6W-mBnyZCTMkIGMR8vFjV",
+        "identification": true,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "DNCF_jNlrCxY34r_TQZwy",
+          "columnIds": [
+            "VaMTVWsAUs5jqgr3r4swt"
+          ],
+          "x": 401.628,
+          "y": 1057.2685000000001,
+          "direction": 8
+        },
+        "end": {
+          "tableId": "suAYRJExpdkc90i0CIilm",
+          "columnIds": [
+            "povqHEV4iUVnS_4YuhiGO"
+          ],
+          "x": 285.4185,
+          "y": 1364.4148,
+          "direction": 4
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      },
+      "vwoCtduSzfWxOE48ZmV_T": {
+        "id": "vwoCtduSzfWxOE48ZmV_T",
+        "identification": true,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+          "columnIds": [
+            "o2jIgoMElWFU4UEWCiX3h"
+          ],
+          "x": 699.5554,
+          "y": 1500.9203,
+          "direction": 1
+        },
+        "end": {
+          "tableId": "suAYRJExpdkc90i0CIilm",
+          "columnIds": [
+            "KYQFBOY1bHfhVm0t6dGrV"
+          ],
+          "x": 549.4185,
+          "y": 1440.4148,
+          "direction": 2
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      },
+      "glmkvDOAZGZ5S8lAM6Muc": {
+        "id": "glmkvDOAZGZ5S8lAM6Muc",
+        "identification": true,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "DNCF_jNlrCxY34r_TQZwy",
+          "columnIds": [
+            "VaMTVWsAUs5jqgr3r4swt"
+          ],
+          "x": 401.628,
+          "y": 905.2685,
+          "direction": 4
+        },
+        "end": {
+          "tableId": "qudpcLmWMa6x97ilfZ17w",
+          "columnIds": [
+            "xhRv98JjcfqW9EoWPSbai"
+          ],
+          "x": 256.0735,
+          "y": 728.8034,
+          "direction": 8
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      },
+      "zmjUH-6mC-KjrYZDOHQ3A": {
+        "id": "zmjUH-6mC-KjrYZDOHQ3A",
+        "identification": true,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "yaDnG6WhmxYj0ezAEBYjw",
+          "columnIds": [
+            "o2jIgoMElWFU4UEWCiX3h"
+          ],
+          "x": 780.7220666666667,
+          "y": 1314.9203,
+          "direction": 4
+        },
+        "end": {
+          "tableId": "qudpcLmWMa6x97ilfZ17w",
+          "columnIds": [
+            "-Y5pS5Sn2bGUuMFj8Cku3"
+          ],
+          "x": 485.5735,
+          "y": 664.8034,
+          "direction": 2
+        },
+        "meta": {
+          "updateAt": 1745913552909,
+          "createAt": 1745913552909
+        }
+      }
+    },
+    "indexEntities": {},
+    "indexColumnEntities": {},
+    "memoEntities": {}
+  },
+  "lww": {
+    "jPmCROilyPvRI-89hTGXA": [
+      "tableColumnEntities",
+      -1,
+      -1,
+      {
+        "dataType": 1745913662604
+      }
+    ]
+  }
+}
