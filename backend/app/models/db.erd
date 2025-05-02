@@ -4,9 +4,9 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -1056.2256,
-    "scrollLeft": -370.9751,
-    "zoomLevel": 0.61,
+    "scrollTop": -1178.3977,
+    "scrollLeft": -566.4162,
+    "zoomLevel": 1,
     "show": 431,
     "database": 4,
     "databaseName": "db_app",
@@ -544,7 +544,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1745913552906,
+          "updateAt": 1746158212317,
           "createAt": 1745913552906
         }
       },
@@ -1758,6 +1758,14 @@
       -1,
       {
         "dataType": 1745913662604
+      }
+    ],
+    "ESRgP6d7cv5Qy1s6ND7uV": [
+      "tableColumnEntities",
+      -1,
+      -1,
+      {
+        "options(primaryKey)": 1746158212317
       }
     ]
   }
