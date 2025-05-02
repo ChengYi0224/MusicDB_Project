@@ -1,14 +1,20 @@
 # init of app
 from flask import Flask
 from .routes import all_blueprints
+from config import DevelopmentConfig, ProductionConfig
 
 def create_app():
     # 初始化app
     app = Flask(__name__)
 
+    # 載入設定檔
+    app.config.from_object(DevelopmentConfig)  
+    # 或者使用 ProductionConfig 根據環境
+    # app.config.from_object(ProductionConfig)
+    
     # 註冊資料庫
-    # from .models import db
-    # db.init_app(app)
+    from database.session import db
+    db.init_app(app)
 
     # 註冊藍圖
     for bp in all_blueprints:
