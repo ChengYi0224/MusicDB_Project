@@ -1,4 +1,4 @@
-from database.session import db
+from app.extensions import db
 
 class PlaylistSong(db.Model):
     __tablename__ = 'playlist_songs'

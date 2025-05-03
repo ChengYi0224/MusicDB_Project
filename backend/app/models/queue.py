@@ -1,4 +1,4 @@
-from database.session import db
+from app.extensions import db
 
 class PlaybackQueue(db.Model):
     __tablename__ = 'playback_queue'

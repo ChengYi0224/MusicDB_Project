@@ -1,4 +1,12 @@
-from database.session import db
+from app.extensions import db
+
+import enum
+from sqlalchemy import Enum
+
+class enumRole(enum.Enum):
+    admin = 'admin'
+    artist = 'artist'
+    user = 'user'
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -8,7 +16,7 @@ class User(db.Model):
     description = db.Column(db.Text, nullable=False, comment='簡介')
     email = db.Column(db.String(255), nullable=False, comment='信箱')
     password_hash = db.Column(db.String(255), nullable=False, comment='密碼HASH')
-    role = db.Column(db.Enum('admin', 'artist', 'user'), nullable=False, comment='權限角色')
+    role = db.Column(Enum(enumRole, name = "enumRole"), nullable=False, comment='權限角色')
     profile_image = db.Column(db.String(255), nullable=False, comment='頭像')
     created_at = db.Column(db.DateTime, nullable=False, comment='註冊時間')
 

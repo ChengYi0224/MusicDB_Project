@@ -1,4 +1,4 @@
-from database.session import db
+from app.extensions import db
 
 class UserHistory(db.Model):
     __tablename__ = 'user_history'

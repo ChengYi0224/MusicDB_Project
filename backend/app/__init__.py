@@ -1,6 +1,7 @@
 # init of app
 from flask import Flask
-from .routes import all_blueprints
+#from .routes import all_blueprints
+from .routes.user import user_bp
 from config import DevelopmentConfig, ProductionConfig
 
 def create_app():
@@ -13,11 +14,12 @@ def create_app():
     # app.config.from_object(ProductionConfig)
     
     # 註冊資料庫
-    from database.session import db
+    from .extensions import db
     db.init_app(app)
 
     # 註冊藍圖
-    for bp in all_blueprints:
-        app.register_blueprint(bp)
+    #for bp in all_blueprints:
+    #    app.register_blueprint(bp)
+    app.register_blueprint(user_bp)
     
     return app

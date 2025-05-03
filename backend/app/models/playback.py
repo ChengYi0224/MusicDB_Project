@@ -1,4 +1,4 @@
-from database.session import db
+from app.extensions import db
 
 class RealtimePlayback(db.Model):
     __tablename__ = 'realtime_playback'

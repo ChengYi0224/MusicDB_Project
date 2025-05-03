@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request
-from models import db, User  # 假設 User 是 SQLAlchemy 定義的模型
 from datetime import datetime
+from app.models import User
+from app.extensions import db
 
 user_bp = Blueprint('user', __name__, url_prefix='/user')
-
 
 # 取得所有使用者
 @user_bp.route('/', methods=['GET'])
