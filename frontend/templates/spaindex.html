@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SoundBase 單頁播放器</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .nav-link.active {
+            font-weight: bold;
+            color: yellow;
+        }
+    </style>
+</head>
+
+<body class="bg-dark text-white">
+
+    <!-- 導覽列 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+        <a class="navbar-brand" href="#" onclick="navigateTo('home')">SoundBase</a>
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item"><a class="nav-link" href="#" onclick="navigateTo('home')">首頁</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" onclick="navigateTo('albums')">專輯</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" onclick="navigateTo('users')">使用者</a></li>
+        </ul>
+    </nav>
+
+    <!-- 播放器 -->
+    <div class="container my-3">
+        <audio id="audio-player" controls src="static/music/sample.mp3" style="width: 100%"></audio>
+    </div>
+
+    <!-- SPA 容器 -->
+    <div class="container" id="content-area">
+        <!-- 這裡會由 JS 動態載入不同內容 -->
+    </div>
+
+    <script>
+        const routes = {
+            home: `<h1>歡迎來到 SoundBase！</h1><p>這是首頁內容</p>`,
+            albums: `<h1>專輯</h1><p>這裡是專輯列表。</p>`,
+            users: `<h1>使用者</h1><p>這裡是使用者資訊。</p>`
+        };
+
+        function navigateTo(page) {
+            document.getElementById("content-area").innerHTML = routes[page] || "<h1>找不到頁面</h1>";
+
+            // 更新網址（不重新整理頁面）
+            history.pushState({ page }, "", `#${page}`);
+
+            // 更新 active 樣式
+            document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));
+            document.querySelectorAll(`.nav-link[href="#${page}"]`).forEach(link => link.classList.add("active"));
+        }
+
+        // 初始化頁面
+        window.onload = () => {
+            const initialPage = location.hash.replace("#", "") || "home";
+            navigateTo(initialPage);
+        };
+
+        // 處理前進/後退按鈕
+        window.onpopstate = (e) => {
+            const page = location.hash.replace("#", "") || "home";
+            navigateTo(page);
+        };
+    </script>
+
+</body>
+
+</html>

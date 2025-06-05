@@ -27,10 +27,8 @@ CREATE TABLE songs (
   duration  INT     NOT NULL COMMENT '長度',
   file_url  VARCHAR(255) NOT NULL COMMENT '音樂檔案路徑',
   is_public BOOLEAN NOT NULL COMMENT '是否公開',
-  album_id  INT     NULL COMMENT '專輯ID',
   PRIMARY KEY (song_id),
-  FOREIGN KEY (user_id) REFERENCES users(user_id),
-  FOREIGN KEY (album_id) REFERENCES albums(album_id)
+  FOREIGN KEY (user_id) REFERENCES users(user_id)
 ) COMMENT='歌曲表';
 
 -- 使用者表
@@ -102,10 +100,10 @@ CREATE TABLE realtime_playback (
 
 -- 歌單共編
 CREATE TABLE playlist_collaborators (
-  queue_id  INT NOT NULL COMMENT '播放佇列ID，PK，FK',
+  playlist_id  INT NOT NULL COMMENT '播放清單ID，PK，FK',
   user_id   INT NOT NULL COMMENT '共編使用者ID，PK，FK',
   permission ENUM('edit', 'view') COMMENT '權限類型',
   PRIMARY KEY (queue_id, user_id),
-  FOREIGN KEY (queue_id) REFERENCES playback_queue(queue_id),
+  FOREIGN KEY (playlist_id) REFERENCES playback(playlist_id),
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 ) COMMENT='歌單共編資訊';

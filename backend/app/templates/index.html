@@ -28,23 +28,21 @@
 </head>
 
 <body>
-    <!-- 導覽列 -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
         <div class="container-fluid">
-            <!-- Logo + 標題 -->
             <a class="navbar-brand d-flex align-items-center" href="/">
                 <img src="static/PureIcon.png" alt="Logo" style="height: 40px;" class="me-2">
                 <span class="fw-bold fs-5">SoundBase</span>
             </a>
-    
-            <!-- 折疊按鈕 -->
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
                 <span class="navbar-toggler-icon"></span>
             </button>
-    
+
             <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
-                <!-- 搜尋欄 -->
-                <form method="get" action="/" class="d-flex mx-auto my-2 my-lg-0 bg-secondary rounded-pill overflow-hidden"
+                // 搜尋欄
+                <form method="get" action="/"
+                    class="d-flex mx-auto my-2 my-lg-0 bg-secondary rounded-pill overflow-hidden"
                     style="max-width: 100%; width: 100%; max-width: 600px; height: 48px;">
                     <input class="form-control border-0 bg-secondary text-white ps-4" type="search" name="q"
                         placeholder="搜尋音樂、專輯..." aria-label="Search" style="font-size: 1rem;">
@@ -52,37 +50,35 @@
                         <img src="static/search-icon.png" alt="搜尋" style="height: 24px; width: 24px;">
                     </button>
                 </form>
-    
-                <!-- 導覽連結 -->
+
                 <ul class="navbar-nav ms-lg-3">
                     <li class="nav-item"><a class="nav-link" href="/albums">專輯</a></li>
                     <li class="nav-item"><a class="nav-link" href="/songs">歌曲</a></li>
                     <li class="nav-item"><a class="nav-link" href="/playlists">播放清單</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/users">使用者</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/user">使用者</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-
-
-   
-
-    <!-- 主內容區 -->
     <div class="container mt-5 mb-5">
         <div class="text-center">
             <h1 class="mb-4">歡迎來到音樂資料庫系統</h1>
             <p class="lead">探索、管理與播放您的音樂收藏。</p>
         </div>
 
-        <!-- 功能區塊 -->
         <div class="row mt-5">
-            <!-- 四個功能卡片 -->
-            <!-- ...原本的卡片保持不變... -->
+        </div>
+
+        <div id="api-data-placeholder" class="mt-5">
+            <h2>從後端 API 載入的範例資料：</h2>
+            <ul id="data-list" class="list-group">
+            </ul>
+            <div id="loading-message" class="alert alert-info mt-3" style="display: none;">正在載入資料...</div>
+            <div id="error-message" class="alert alert-danger mt-3" style="display: none;"></div>
         </div>
     </div>
 
-    <!-- 播放器區塊 -->
     <div id="music-player-bar">
         <div class="container d-flex justify-content-between align-items-center">
             <div>
@@ -114,6 +110,63 @@
             const section = document.getElementById('expand-section');
             section.style.display = section.style.display === 'none' ? 'block' : 'none';
         }
+
+        // 新增：用於呼叫 API 並顯示資料的 JavaScript
+        document.addEventListener('DOMContentLoaded', function () {
+            const dataList = document.getElementById('data-list');
+            const loadingMessage = document.getElementById('loading-message');
+            const errorMessage = document.getElementById('error-message');
+
+            // 顯示載入中訊息
+            if (loadingMessage) loadingMessage.style.display = 'block';
+            if (errorMessage) errorMessage.style.display = 'none'; // 隱藏之前的錯誤訊息
+
+            // 替換成您實際的後端 API 端點
+            const apiUrl = 'https://jsonplaceholder.typicode.com/posts?_limit=3'; // 範例 API，限制回傳 3 筆資料
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok (status: ${response.status})`);
+                    }
+                    return response.json(); // 將回應轉換成 JSON
+                })
+                .then(data => {
+                    if (loadingMessage) loadingMessage.style.display = 'none'; // 隱藏載入中訊息
+
+                    if (dataList) {
+                        dataList.innerHTML = ''; // 清空之前的列表項目 (如果有的話)
+                        if (data && data.length > 0) {
+                            data.forEach(item => {
+                                const listItem = document.createElement('li');
+                                listItem.classList.add('list-group-item');
+                                // 根據您的 API 回傳資料結構調整以下內容
+                                // 範例 API 回傳的資料有 title 和 body 欄位
+                                listItem.innerHTML = `<strong>標題:</strong> ${item.title}<br><small>內容: ${item.body.substring(0, 100)}...</small>`;
+                                dataList.appendChild(listItem);
+                            });
+                        } else {
+                            const listItem = document.createElement('li');
+                            listItem.classList.add('list-group-item');
+                            listItem.textContent = '沒有從 API 獲取到資料。';
+                            dataList.appendChild(listItem);
+                        }
+                    } else {
+                        console.error('Element with id "data-list" not found.');
+                    }
+                })
+                .catch(error => {
+                    if (loadingMessage) loadingMessage.style.display = 'none'; // 隱藏載入中訊息
+                    console.error('Fetch API 時發生錯誤:', error);
+                    if (errorMessage) {
+                        errorMessage.textContent = `載入資料失敗：${error.message}。請檢查 API 端點或網路連線。`;
+                        errorMessage.style.display = 'block';
+                    }
+                    if (dataList) { // 也許在列表處顯示錯誤
+                        dataList.innerHTML = '<li class="list-group-item text-danger">無法載入資料。</li>';
+                    }
+                });
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
