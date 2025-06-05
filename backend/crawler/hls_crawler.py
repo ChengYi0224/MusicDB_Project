@@ -11,6 +11,7 @@ import subprocess # 用於 ffmpeg
 import json
 import shutil # 用於合併 .ts 檔案後的清理工作
 import random # 用於隨機爬取
+from enum import Enum
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -32,19 +33,36 @@ class AnsiColors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
 
+# --- 定義日誌細節等級 ---
+class LogLevel(Enum):
+    ERROR = 0
+    WARNING = 1
+    SUCCESS = 2
+    INFO = 3
+    DEBUG = 4
+
+CURRENT_LOG_LEVEL = LogLevel.INFO # 預設為 INFO 級別 (您可以調整這裡)
+
 # --- Print 函數 ---
-def print_warning(message):
-    print(f"{AnsiColors.RED}{AnsiColors.BOLD}[警告]{AnsiColors.ENDC} {message}")
-
 def print_error(message):
-    print(f"{AnsiColors.RED}{AnsiColors.BOLD}[錯誤]{AnsiColors.ENDC} {message}")
+    if CURRENT_LOG_LEVEL.value >= LogLevel.ERROR.value:
+        print(f"{AnsiColors.RED}{AnsiColors.BOLD}[錯誤] {message}{AnsiColors.ENDC}")
 
-def print_info(message):
-    print(f"{AnsiColors.BLUE}{message}{AnsiColors.ENDC}")
+def print_warning(message):
+    if CURRENT_LOG_LEVEL.value >= LogLevel.WARNING.value:
+        print(f"{AnsiColors.RED}{AnsiColors.BOLD}[警告]{AnsiColors.ENDC} {message}")
 
 def print_success(message):
-    print(f"{AnsiColors.YELLOW}{message}{AnsiColors.ENDC}")
+    if CURRENT_LOG_LEVEL.value >= LogLevel.SUCCESS.value:
+        print(f"{AnsiColors.YELLOW}[成功]{AnsiColors.ENDC} {message}")
 
+def print_info(message):
+    if CURRENT_LOG_LEVEL.value >= LogLevel.INFO.value:
+        print(f"{AnsiColors.BLUE}{message}{AnsiColors.ENDC}")
+
+def print_debug(message):
+    if CURRENT_LOG_LEVEL.value >= LogLevel.DEBUG.value:
+        print(f"{AnsiColors.GREEN}[除錯]{AnsiColors.ENDC} {message}")
 
 # --- 網址 ---
 TARGET_SITE_DOMAIN = "https://streetvoice.com"
@@ -135,7 +153,7 @@ def fetch_and_extract_song_infos(driver, max_count=100):
     print_info(f"開始從 {SONG_LIST_BROWSE_URL} 蒐集歌曲資訊...")
     try:
         driver.get(SONG_LIST_BROWSE_URL)
-        print_info(f"  已導覽至: {SONG_LIST_BROWSE_URL}")
+        print_debug(f"已導覽至: {SONG_LIST_BROWSE_URL}")
         time.sleep(REQUEST_DELAY_SECONDS + 2)
 
         # 嘗試點擊一次 "LOAD MORE"
@@ -143,18 +161,18 @@ def fetch_and_extract_song_infos(driver, max_count=100):
             load_more_button = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, LOAD_MORE_BUTTON_SELECTOR))
             )
-            print_info("  偵測到「點我看更多」按鈕，嘗試點擊...")
+            print_debug("偵測到「點我看更多」按鈕，嘗試點擊...")
             driver.execute_script("arguments[0].click();", load_more_button)
             time.sleep(SCROLL_PAUSE_TIME)
         except TimeoutException:
-            print_info("  未找到「點我看更多」按鈕，將直接滾動。")
+            print_debug("未找到「點我看更多」按鈕，將直接滾動。")
         except Exception as e:
             print_warning(f"點擊「點我看更多」按鈕時發生錯誤: {e}")
 
         scroll_attempts = 0
         while len(song_infos) < max_count and scroll_attempts < MAX_SCROLL_ATTEMPTS:
             scroll_attempts += 1
-            print_info(f"  嘗試滾動第 {scroll_attempts}/{MAX_SCROLL_ATTEMPTS} 次...")
+            print_debug(f"嘗試滾動第 {scroll_attempts}/{MAX_SCROLL_ATTEMPTS} 次...")
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(SCROLL_PAUSE_TIME)
 
@@ -177,16 +195,16 @@ def fetch_and_extract_song_infos(driver, max_count=100):
                     artist = artist_element.text.strip() if artist_element else "未知作者"
                     song_page_url = urljoin(TARGET_SITE_DOMAIN, title_element.get('href', ''))
                     
-                    song_info = {
+                    song_info_data = {
                         "song_id": song_id,
                         "title": title,
                         "artist_name": artist,
                         "song_page_url": song_page_url
                     }
-                    song_infos.append(song_info)
+                    song_infos.append(song_info_data)
                     processed_song_ids.add(song_id)
                     new_found_this_round += 1
-                    print_info(f"    蒐集到資訊 ({len(song_infos)}): {title} - {artist} (ID: {song_id})")
+                    print_debug(f"蒐集到資訊 ({len(song_infos)}): {title} - {artist} (ID: {song_id})")
                     
                     if len(song_infos) >= max_count:
                         break
@@ -194,11 +212,11 @@ def fetch_and_extract_song_infos(driver, max_count=100):
                     print_warning(f"解析某個歌曲項目時出錯: {e}")
 
             if len(song_infos) >= max_count:
-                print_info("  已達到目標歌曲數量。")
+                print_info("已達到目標歌曲數量。")
                 break
             
             if new_found_this_round == 0:
-                 print_info("    此次滾動未發現新歌曲，可能已達頁面底部。")
+                 print_debug("此次滾動未發現新歌曲，可能已達頁面底部。")
                  break
 
     except TimeoutException:
@@ -222,22 +240,22 @@ def get_m3u8_url_from_api(driver, song_info):
         print_error("歌曲資訊中缺少 'song_id'。")
         return None
 
-    print_info(f"  準備為 '{song_info['title']}' (ID: {song_id}) 模擬 API 請求...")
+    print_debug(f"準備為 '{song_info['title']}' (ID: {song_id}) 模擬 API 請求...")
 
-    # 獲取 csrftoken
-    csrftoken = None
+    # 獲取 csrf-token
+    csrf_token_value = None
     try:
         cookies = driver.get_cookies()
         for cookie in cookies:
-            if cookie['name'] == 'csrftoken':
-                csrftoken = cookie['value']
-                print_info("      成功從 cookie 獲取到 'csrftoken'。")
+            if cookie['name'] == 'csrf-token': # <-- 修改處
+                csrf_token_value = cookie['value']
+                print_debug("成功從 cookie 獲取到 'csrf-token'。")
                 break
     except Exception as e_cookie:
-        print_warning(f"獲取 csrftoken 時發生異常: {e_cookie}")
+        print_warning(f"獲取 csrf-token 時發生異常: {e_cookie}")
     
-    if not csrftoken:
-        print_warning("未能獲取到 'csrftoken'，將嘗試無 token 請求。")
+    if not csrf_token_value:
+        print_warning("未能獲取到 'csrf-token'，將嘗試無 token 請求。")
 
     # 獲取 Selenium session 的 cookies 以便 requests 使用
     session_requests_cookies = {c['name']: c['value'] for c in driver.get_cookies()}
@@ -248,10 +266,10 @@ def get_m3u8_url_from_api(driver, song_info):
         'X-Requested-With': 'XMLHttpRequest',
         'Origin': TARGET_SITE_DOMAIN
     }
-    if csrftoken:
-        headers['X-Csrftoken'] = csrftoken
-    
-    print_info(f"    正在向 API ({api_url}) 發送 POST 請求...")
+    if csrf_token_value:
+        headers['X-Csrf-Token'] = csrf_token_value # <-- 修改處 (通常 Header 名稱會是這樣)
+
+    print_debug(f"正在向 API ({api_url}) 發送 POST 請求...")
     try:
         response = requests.post(api_url, headers=headers, cookies=session_requests_cookies, timeout=15)
         response.raise_for_status()
@@ -259,7 +277,7 @@ def get_m3u8_url_from_api(driver, song_info):
         
         if response_data and "file" in response_data and response_data["file"]:
             m3u8_url = response_data["file"]
-            print_success(f"    成功從 API 獲取 m3u8 URL: {m3u8_url}")
+            print_success(f"成功從 API 獲取 m3u8 URL: {m3u8_url}")
             return m3u8_url
         else:
             print_warning(f"API 回應成功，但 JSON 中無 'file' 內容。回應: {response_data}")
@@ -283,7 +301,7 @@ def download_and_merge_song(m3u8_url, output_dir, output_filename_base):
     merged_ts_path = os.path.join(output_dir, f"{safe_filename_base}.ts")
 
     if os.path.exists(merged_ts_path):
-        print_info(f"    檔案已存在，跳過下載: {merged_ts_path}")
+        print_debug(f"檔案已存在，跳過下載: {merged_ts_path}")
         return merged_ts_path, None # 已存在，直接返回路徑
 
     # 為每個歌曲的 ts 片段建立獨立的臨時下載目錄
@@ -291,7 +309,7 @@ def download_and_merge_song(m3u8_url, output_dir, output_filename_base):
     os.makedirs(temp_ts_dir, exist_ok=True)
     
     try:
-        print_info(f"    準備從 {m3u8_url} 下載歌曲...")
+        print_info(f"準備從 {m3u8_url} 下載歌曲...")
         m3u8_content = None
         try:
             m3u8_resp = requests.get(m3u8_url, timeout=15)
@@ -309,7 +327,7 @@ def download_and_merge_song(m3u8_url, output_dir, output_filename_base):
             return None, m3u8_content
 
         ts_files_to_merge = []
-        print_info(f"    開始下載 '{safe_filename_base}' 的 {len(ts_urls)} 個 .ts 片段到 '{temp_ts_dir}'...")
+        print_debug(f"開始下載 '{safe_filename_base}' 的 {len(ts_urls)} 個 .ts 片段到 '{temp_ts_dir}'...")
         for idx, ts_url in enumerate(tqdm(ts_urls, desc=f"TS-{safe_filename_base[:20]}", unit="片段", ncols=100, leave=False)):
             ts_temp_filename = os.path.join(temp_ts_dir, f"part_{idx:04d}.ts")
             try:
@@ -326,7 +344,7 @@ def download_and_merge_song(m3u8_url, output_dir, output_filename_base):
             print_error(f"'{safe_filename_base}' 沒有任何 .ts 片段成功下載。")
             return None, m3u8_content
 
-        print_info(f"    正在合併 '{safe_filename_base}' 的 {len(ts_files_to_merge)} 個 .ts 片段 -> {merged_ts_path}")
+        print_info(f"正在合併 '{safe_filename_base}' 的 {len(ts_files_to_merge)} 個 .ts 片段 -> {merged_ts_path}")
         with open(merged_ts_path, "wb") as wfp:
             for ts_file_path in ts_files_to_merge:
                 if os.path.exists(ts_file_path):
@@ -345,12 +363,12 @@ def download_and_merge_song(m3u8_url, output_dir, output_filename_base):
         # --- 清理程序 ---
         # 這段程式碼無論 try 區塊是成功結束還是發生錯誤跳出，都一定會執行
         if os.path.exists(temp_ts_dir):
-            print_info(f"    執行清理程序，刪除臨時目錄: {temp_ts_dir}")
+            print_debug(f"執行清理程序，刪除臨時目錄: {temp_ts_dir}")
             try:
                 shutil.rmtree(temp_ts_dir)
-                print_success(f"    臨時目錄已成功刪除。")
+                print_debug(f"臨時目錄已成功刪除。")
             except Exception as e_rm:
-                print_warning(f"    清理臨時目錄時發生錯誤: {e_rm}")
+                print_warning(f"清理臨時目錄時發生錯誤: {e_rm}")
 
 
 # --- 主執行函數 ---
@@ -420,28 +438,28 @@ def run_song_crawler(max_songs_to_crawl=10,
     if not actual_songs_to_process and all_potential_songs:
          print_info("所有從網站獲取的歌曲似乎都已在先前處理過。")
 
-    for i, song_info in enumerate(actual_songs_to_process):
+    for i, song_info_item in enumerate(actual_songs_to_process):
         print_info(f"\n--- 正在處理新歌曲 {i+1}/{len(actual_songs_to_process)} ---")
         
-        title = song_info.get("title")
-        artist = song_info.get("artist_name")
+        title = song_info_item.get("title")
+        artist = song_info_item.get("artist_name")
         
         current_song_identifier = (title, artist)
         if current_song_identifier in processed_song_identifiers_runtime:
             print_info(f"歌曲 '{title}' (歌手: {artist}) 在本次運行中已處理過，跳過。")
             continue
         
-        print_info(f"  標題: {title}")
-        print_info(f"  歌手: {artist}")
-        print_info(f"  Song ID: {song_info.get('song_id')}")
-        print_info(f"  歌曲頁面: {song_info.get('song_page_url')}")
+        print_info(f"標題: {title}")
+        print_info(f"歌手: {artist}")
+        print_debug(f"Song ID: {song_info_item.get('song_id')}")
+        print_debug(f"歌曲頁面: {song_info_item.get('song_page_url')}")
 
-        m3u8_url = get_m3u8_url_from_api(driver, song_info)
+        m3u8_url_result = get_m3u8_url_from_api(driver, song_info_item)
         merged_file_path = None
         song_duration = None
-        m3u8_content_for_duration_calc = None
+        # m3u8_content_for_duration_calc = None # 此變數在 download_and_merge_song 內部處理
 
-        if not m3u8_url:
+        if not m3u8_url_result:
             print_warning(f"歌曲 '{title}' 因無法獲取 m3u8 URL 而跳過下載。")
         else:
             artist_prefix_for_dir = sanitize_filename(artist)
@@ -449,25 +467,25 @@ def run_song_crawler(max_songs_to_crawl=10,
             artist_specific_download_dir = os.path.join(DOWNLOAD_BASE_DIR, artist_prefix_for_dir)
             output_filename_base = f"{artist_prefix_for_dir}_{title_suffix_for_file}"
 
-            merged_file_path, m3u8_content_for_duration_calc = download_and_merge_song(
-                m3u8_url, artist_specific_download_dir, output_filename_base
+            merged_file_path, _ = download_and_merge_song( # m3u8_content 不再需要在外部使用
+                m3u8_url_result, artist_specific_download_dir, output_filename_base
             )
 
             if merged_file_path:
-                print_success(f"  歌曲已合併到: {merged_file_path}")
+                print_success(f"歌曲已合併到: {merged_file_path}")
                 song_duration = get_song_duration_ffmpeg(merged_file_path)
-                if song_duration: print_info(f"    ffprobe 分析時長: {song_duration:.2f} 秒")
-                else: print_warning("無法獲取歌曲時長。")
+                if song_duration: print_debug(f"ffprobe 分析時長: {song_duration:.2f} 秒")
+                else: print_warning("無法獲取歌曲時長 (ffprobe)。")
             else:
                 print_error(f"歌曲 '{title}' 下載或合併失敗。")
 
         song_db_entry = {
             "uuid": str(uuid.uuid4()), 
-            "song_id": song_info.get("song_id"), "title": title, "artist_name": artist,
+            "song_id": song_info_item.get("song_id"), "title": title, "artist_name": artist,
             "duration_seconds": round(song_duration) if song_duration is not None else None,
             "local_file_path": merged_file_path,
-            "source_page_url": song_info.get("song_page_url"),
-            "m3u8_url_found": m3u8_url, "is_public": True
+            "source_page_url": song_info_item.get("song_page_url"),
+            "m3u8_url_found": m3u8_url_result, "is_public": True
         }
         crawled_songs_data.append(song_db_entry)
         processed_song_identifiers_runtime.add(current_song_identifier) 
@@ -491,10 +509,18 @@ def run_song_crawler(max_songs_to_crawl=10,
     return crawled_songs_data
 
 if __name__ == "__main__":
-    print_info("StreetVoice HLS 歌曲爬蟲 (v2 - Browse 頁面模式)")
+    # 設定您希望的日誌等級
+    # CURRENT_LOG_LEVEL = LogLevel.DEBUG # 最詳細
+    CURRENT_LOG_LEVEL = LogLevel.INFO # 只看資訊、成功、警告、錯誤
+    # CURRENT_LOG_LEVEL = LogLevel.SUCCESS # 只看成功、警告、錯誤
+    # CURRENT_LOG_LEVEL = LogLevel.WARNING # 只看警告、錯誤
+    # CURRENT_LOG_LEVEL = LogLevel.ERROR # 只看錯誤
+
+    print_info("StreetVoice HLS 歌曲爬蟲 v2.1")
     print_info("="*50)
     print_info(f"下載的檔案將儲存在 \"{DOWNLOAD_BASE_DIR}\" 目錄下。")
     print_info(f"爬取到的歌曲元資料將會附加到 \"{SONGS_OUTPUT_FILEPATH}\" 檔案中。")
+    print_info(f"目前日誌等級設定為: {CURRENT_LOG_LEVEL.name}")
     print_info("="*50)
     
     # --- 執行 ---
@@ -512,7 +538,7 @@ if __name__ == "__main__":
     
     if crawled_data:
         print_info("\n--- 本次爬取到的新歌曲摘要 ---")
-        for song_info in crawled_data:
-            print_info(f"  標題: {song_info['title']}, 歌手: {song_info.get('artist_name', '未知')}, M3U8: {'有' if song_info.get('m3u8_url_found') else '無'}, 本地: {song_info.get('local_file_path', '無')}")
+        for song_summary in crawled_data:
+            print_info(f"標題: {song_summary['title']}, 歌手: {song_summary.get('artist_name', '未知')}, M3U8: {'有' if song_summary.get('m3u8_url_found') else '無'}, 本地: {song_summary.get('local_file_path', '無')}")
     
     print_info("\n爬蟲腳本主邏輯執行完畢。")
