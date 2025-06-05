@@ -36,6 +36,14 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
+# --- Crawler Output ---
+# 忽略主要的下載歌曲資料夾 (包含所有歌曲和臨時檔)
+.backend/crawler/downloads/
+*.ts
+
+# 忽略爬蟲產生的紀錄檔
+crawled_songs.txt
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
