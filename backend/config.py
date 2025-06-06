@@ -10,3 +10,4 @@ Password = "MusicDBPassword"
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = f"postgresql://{User}:{Password}@{Host}:{Port}/{Database}"
+    SECRET_KEY = "MusicDB_SECRET_KEY"

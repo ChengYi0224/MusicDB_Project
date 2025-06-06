@@ -55,7 +55,23 @@
                     <li class="nav-item"><a class="nav-link" href="/albums">專輯</a></li>
                     <li class="nav-item"><a class="nav-link" href="/songs">歌曲</a></li>
                     <li class="nav-item"><a class="nav-link" href="/playlists">播放清單</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/user">使用者</a></li>
+                    {% if user %} {# 如果 user 變數存在 (表示已登入) #}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('user.user_profile') }}">
+                                {{ user.username }} {# 顯示使用者名稱 #}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('user.user_logout') }}">登出</a>
+                        </li>
+                    {% else %} {# 如果 user 變數不存在 (表示未登入) #}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('user.user_login') }}">登入</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.register') }}">註冊</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

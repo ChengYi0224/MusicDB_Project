@@ -1,0 +1,62 @@
+<!-- app/templates/login.html -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>使用者登入</title>
+    <!-- 如果你想要簡單套 Bootstrap，可加上以下 CSS Link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #f8f9fa;
+      }
+      .login-container {
+        max-width: 400px;
+        margin: 80px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+    </style>
+</head>
+<body>
+  <div class="login-container">
+    <h3 class="mb-4 text-center">使用者登入</h3>
+
+    {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="alert alert-{{ category }}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('user.user_login') }}">
+      <div class="mb-3">
+        <label for="username" class="form-label">帳號</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="請輸入帳號" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">密碼</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="請輸入密碼" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">登入</button>
+    </form>
+
+    <div class="mt-3 text-center">
+      <!-- 如果你有註冊頁，這裡可以連到註冊，否則就不放 -->
+      <a href="{{ url_for('auth.register') }}">沒有帳號？馬上註冊</a>
+      <a href="{{ url_for('default.index') }}">回首頁</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template
+from flask import Blueprint, request, render_template, session, redirect, url_for, flash
 from app.extensions import db
 from app.models import Album, Song, User, Playlist # 導入模型
 # 從 utils 導入輔助函數
@@ -10,12 +10,13 @@ default_bp = Blueprint('default', __name__, url_prefix='/')
 def index():
     query_string = request.args.get('q', '').strip()
     search_results = []
+    
 
     if query_string:
         # 使用輔助函數搜尋歌曲
         song_results = find_songs_by_title(db.session, Song, User, query_string)
         search_results.extend(song_results)
-
+        
         # 對於專輯、使用者、播放清單，也可以使用類似的輔助函數
         # album_results = find_albums_by_title(db.session, Album, User, query_string)
         # search_results.extend(album_results)
@@ -41,5 +42,10 @@ def index():
 
         if not search_results and query_string: # 檢查最終的 search_results
             search_results.append({'type': '提示', 'message': f"找不到與 '{query_string}' 相關的內容。"})
+
+    logged_in_user = None
+    if 'user_id' in session:
+        logged_in_user = User.query.get(session['user_id'])
+    print(f"user_id: {session.get('user_id')}, logged_in_user: {logged_in_user}")
             
-    return render_template('index.html', query=query_string, results=search_results)
+    return render_template('index.html', query=query_string, results=search_results, user=logged_in_user)
