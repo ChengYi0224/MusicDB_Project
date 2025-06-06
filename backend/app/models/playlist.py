@@ -1,3 +1,4 @@
+# models/playlist.py
 from app.extensions import db
 
 class Playlist(db.Model):
