@@ -10,7 +10,7 @@ def create_app():
     # 初始化app
     app = Flask(
         __name__,
-        #static_folder='../../frontend/static',
+        static_folder='../../frontend/static',
         template_folder="../../frontend/templates",
         )
 
