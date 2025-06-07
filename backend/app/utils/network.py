@@ -67,3 +67,19 @@ def Has_IPv6_Addr(target_host="ipv6.google.com", target_port=80, timeout=5):
     finally:
         if sock_connect:
             sock_connect.close() # 確保 socket 被關閉
+
+def Check_IPv6_Dialogue():
+    print("正在檢查本機是否支援 IPv6...")
+    if not Has_IPv6_Addr():
+        print("本機不支援 IPv6，強制啟動將無法連線資料庫。")
+        print("是否強制啟動？(y/n): ", end="")
+        force = input().strip().lower() == 'y'
+        if not force:
+            return False
+        else:
+            print("> 結果: 不支援IPv6，當前強制啟動")
+            return True
+    else:
+        print("> 結果: 支援 IPv6")
+        return True
+    

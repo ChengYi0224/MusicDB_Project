@@ -6,6 +6,7 @@ from app.utils import Has_IPv6_Addr
 if __name__ == "__main__":
     app = create_app()
     #migrate = Migrate(app, db)
+    print("正在檢查本機是否支援 IPv6...")
     if not Has_IPv6_Addr():
         print("本機不支援 IPv6，強制啟動將無法連線資料庫。")
         print("是否強制啟動？(y/n): ", end="")
