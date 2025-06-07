@@ -168,8 +168,8 @@
             <h2 class="mb-4">關於 "{{ query }}" 的搜尋結果</h2>
             <div class="list-group">
                 {% for result in results %}
+                {# 判斷1：如果結果是可播放的歌曲 #}
                 {% if result.type == '歌曲' %}
-                {# 為「歌曲」產生可播放的 DIV，點擊後觸發播放器，沒有連結功能 #}
                 <div class="list-group-item list-group-item-action playable-song" style="cursor: pointer;"
                     data-file-url="{{ result.file_url }}" data-title="{{ result.title }}"
                     data-artist="{{ result.artist_name }}">
@@ -180,8 +180,15 @@
                     </div>
                     <p class="mb-1">{{ result.artist_name }}</p>
                 </div>
+        
+                {# 【新增判斷】判斷2：處理後端回傳的「找不到結果」的特殊提示項目 #}
+                {% elif result.type == '提示' %}
+                <div class="list-group-item">
+                    <p class="mb-0">找不到任何符合 "{{ query }}" 的結果。</p>
+                </div>
+        
+                {# 判斷3：其他非歌曲的正常結果 (例如未來的專輯或播放清單) #}
                 {% else %}
-                {# 其他非歌曲的類型 (如專輯)，則顯示為一個無法點擊的普通項目 #}
                 <div class="list-group-item">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{ result.title }}</h5>
@@ -190,6 +197,8 @@
                     <p class="mb-1">{{ result.artist_name | default('未知創作者') }}</p>
                 </div>
                 {% endif %}
+        
+                {# Fallback: 如果後端某天修正了，回傳真正的空列表，這個 else 依然能正常運作 #}
                 {% else %}
                 <div class="list-group-item">
                     <p class="mb-0">找不到任何符合 "{{ query }}" 的結果。</p>
