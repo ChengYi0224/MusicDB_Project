@@ -61,3 +61,62 @@ def user_profile():
     else:
         flash('找不到您的使用者資訊。', 'danger')
         return redirect(url_for('user.user_login'))
+    
+# 新增：編輯個人資料路由
+@user_bp.route("/profile/edit", methods=['GET', 'POST'])
+def edit_profile():
+    if 'user_id' not in session:
+        flash('請先登入。', 'warning')
+        return redirect(url_for('user.user_login'))
+
+    user_id = session['user_id']
+    user = db.session.get(User, user_id) # 獲取當前登入的使用者物件
+
+    if not user:
+        flash('找不到您的使用者資訊。', 'danger')
+        return redirect(url_for('user.user_login'))
+
+    if request.method == 'POST':
+        # 獲取表單資料
+        new_username = request.form.get('username', '').strip()
+        new_email = request.form.get('email', '').strip()
+        new_description = request.form.get('description', '')
+
+        # 簡單的驗證
+        if not new_username:
+            flash('使用者名稱不能為空。', 'danger')
+            return render_template("edit_profile.html", user=user)
+        if not new_email:
+            flash('信箱不能為空。', 'danger')
+            return render_template("edit_profile.html", user=user)
+        
+        # 檢查使用者名稱和郵箱是否已被其他使用者使用 (排除當前使用者本身)
+        if new_username != user.username:
+            existing_user_by_username = User.query.filter_by(username=new_username).first()
+            if existing_user_by_username and existing_user_by_username.user_id != user.user_id:
+                flash('該使用者名稱已被使用，請選擇其他名稱。', 'danger')
+                return render_template("edit_profile.html", user=user)
+        
+        if new_email != user.email:
+            existing_user_by_email = User.query.filter_by(email=new_email).first()
+            if existing_user_by_email and existing_user_by_email.user_id != user.user_id:
+                flash('該信箱已被註冊，請選擇其他信箱。', 'danger')
+                return render_template("edit_profile.html", user=user)
+
+        # 更新使用者物件的屬性
+        user.username = new_username
+        user.email = new_email
+        user.description = new_description
+
+        try:
+            db.session.commit() # 提交資料庫變更
+            flash('個人資料更新成功！', 'success')
+            return redirect(url_for('user.user_profile'))
+        except Exception as e:
+            db.session.rollback() # 出錯時回滾
+            flash(f'更新失敗：{e}。', 'danger')
+            # 可以在這裡添加更詳細的錯誤日誌
+            print(f"Database update error: {e}")
+
+    # 如果是 GET 請求，顯示編輯表單頁面
+    return render_template("edit_profile.html", user=user)
