@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ playlist.title }} - 播放清單</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('default.index') }}">
+                <span class="fw-bold fs-5">SoundBase</span>
+            </a>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('default.index') }}">回首頁</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="d-flex align-items-center mb-4">
+            <div class="me-4">
+                <div class="bg-secondary text-white d-flex align-items-center justify-content-center"
+                    style="width: 180px; height: 180px; font-size: 3rem;">
+                    🎵
+                </div>
+            </div>
+            <div>
+                <h1 class="display-5 fw-bold">{{ playlist.title }}</h1>
+                <p class="lead text-muted">由 {{ playlist.user.username if playlist.user else '未知作者' }} 建立</p>
+                <p>{{ playlist.songs|length }} 首歌曲</p>
+            </div>
+        </div>
+
+        <hr>
+
+        <ul class="list-group list-group-flush">
+            {% for song in playlist.songs %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fw-bold">{{ song.title }}</div>
+                    <small class="text-muted">{{ song.user.username if song.user else '未知作者' }}</small>
+                </div>
+                <span class="text-muted">{{ "%02d:%02d"|format(song.duration // 60, song.duration % 60) }}</span>
+            </li>
+            {% else %}
+            <li class="list-group-item">這個播放清單目前沒有歌曲。</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
