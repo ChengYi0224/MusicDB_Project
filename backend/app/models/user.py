@@ -28,7 +28,7 @@ class User(db.Model):
     albums = db.relationship('Album', back_populates='user')
     songs = db.relationship('Song', back_populates='user')
     playlists = db.relationship('Playlist', back_populates='user')
-    playlist_songs = db.relationship('PlaylistSong', back_populates='added_by_user')
+    added_playlist_entries = db.relationship('PlaylistSong', back_populates='added_by_user')
     user_history = db.relationship('UserHistory', back_populates='user')
     playback_queue = db.relationship('PlaybackQueue', back_populates='user')
     realtime_playback = db.relationship('RealtimePlayback', back_populates='user')

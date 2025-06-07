@@ -20,6 +20,8 @@ def create_app():
     # 註冊資料庫
     from .extensions import db
     db.init_app(app)
+    from .extensions import migrate
+    migrate.init_app(app, db)
 
     # 註冊藍圖
     for bp in all_blueprints:
