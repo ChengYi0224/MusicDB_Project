@@ -205,10 +205,3 @@ class PlaylistCrawler(BaseCrawler):
             print_error(f"抓取歌單資訊時發生錯誤: {e}")
         
         return []
-
-    def _process_single_song_download(self, song_info_item):
-        song_db_entry = super()._process_single_song_download(song_info_item)
-        song_db_entry["playlist_title"] = song_info_item.get("playlist_title")
-        song_db_entry["playlist_url"] = song_info_item.get("playlist_url")
-        song_db_entry["track_num"] = song_info_item.get("track_num")
-        return song_db_entry

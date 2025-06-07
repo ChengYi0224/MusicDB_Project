@@ -20,7 +20,7 @@ if __name__ == "__main__":
     playlist_crawler = PlaylistCrawler()
 
     # --- 爬取歌單中的所有歌曲 ---
-    max_playlists = 10
+    max_playlists = 2
     max_songs = None
     print_info(f"--- 爬取 {max_playlists} 個歌單的所有歌曲 ---")
     crawled_data = playlist_crawler.crawl(
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     browse_crawler = BrowseSongCrawler()
     
     # --- 爬取瀏覽頁面歌曲 ---
-    max_songs = 50
+    max_songs = 10
     print_info(f"--- 執行場景：爬取瀏覽頁面前 {max_songs} 首歌 ---")
     crawled_data = browse_crawler.crawl(max_songs_to_crawl=max_songs)
 

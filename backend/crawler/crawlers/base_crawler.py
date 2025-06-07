@@ -14,6 +14,9 @@ import random
 from enum import Enum
 from backend import config
 
+import queue
+import threading
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.edge.service import Service as EdgeService
@@ -250,12 +253,14 @@ def download_and_merge_song(m3u8_url, output_dir, output_filename_base):
 class BaseCrawler:
     def __init__(self, 
                  output_filepath=None, 
-                 download_base_dir=config.DOWNLOAD_BASE_DIR):
+                 download_base_dir=config.DOWNLOAD_BASE_DIR,
+                 num_worker_threads=4): # 新增：設定工人執行緒數量
         self.driver = None
         self.output_filepath = output_filepath
         self.download_base_dir = download_base_dir
         self.processed_identifiers_runtime = set()
         self.previously_crawled_ids = set()
+        self.num_worker_threads = num_worker_threads # 儲存工人數量
 
     def _initialize_driver(self):
         if not self.driver:
@@ -292,97 +297,224 @@ class BaseCrawler:
             except Exception as e:
                 print_error(f"無法將資料附加到檔案 {self.output_filepath}: {e}")
 
-    def _process_single_song_download(self, song_info_item):
+    @staticmethod
+    def convert_to_mp4_ffmpeg(input_ts_path, output_mp4_path):
+        """
+        使用 FFmpeg 將 .ts 檔案轉換為音訊為 AAC 的 MP4 檔案。
+        """
+        ffmpeg_cmd = "ffmpeg"
+        if not os.path.exists(input_ts_path):
+            print_error(f"轉碼失敗 - 輸入檔案不存在: {input_ts_path}")
+            return None
+
+        command = [
+            ffmpeg_cmd,
+            "-y", 
+            "-i", input_ts_path,
+            "-c:v", "copy",
+            "-c:a", "aac",
+            "-b:a", "192k",
+            "-loglevel", "error",
+            output_mp4_path
+        ]
+
+        print_info(f"正在將 '{os.path.basename(input_ts_path)}' 轉碼為 MP4 (AAC)...")
+        try:
+            result = subprocess.run(command, check=True, text=True, capture_output=True)
+            print_success(f"成功轉碼並儲存至: {output_mp4_path}")
+            return output_mp4_path
+        except FileNotFoundError:
+            print_error(f"轉碼失敗 - FFmpeg ('{ffmpeg_cmd}') 找不到。請確保已安裝並設定在系統 PATH。")
+            return None
+        except subprocess.CalledProcessError as e:
+            print_error(f"FFmpeg 轉碼失敗 (返回碼 {e.returncode})。")
+            print_error(f"FFmpeg 錯誤輸出:\n{e.stderr}")
+            return None
+        except Exception as e:
+            print_error(f"執行 FFmpeg 轉碼時發生未知錯誤: {e}")
+            return None
+
+    def _process_single_song_download(self, song_info_item, conversion_queue):
+        """
+        這個方法現在只負責下載和合併，然後把轉碼任務放入佇列。
+        它會以 song_info_item 為範本來建立任務。
+        """
         title = song_info_item.get("title")
         artist = song_info_item.get("artist_name")
-        print_info(f"正在處理: {title} - {artist}")
+        print_info(f"正在處理下載: {title} - {artist}")
         m3u8_url_result = get_m3u8_url_from_api(self.driver, song_info_item)
-        merged_file_path = None
-        song_duration = None
+        
         if m3u8_url_result:
             artist_prefix_for_dir = sanitize_filename(artist)
             title_suffix_for_file = sanitize_filename(title)
             artist_specific_download_dir = os.path.join(self.download_base_dir, artist_prefix_for_dir)
             output_filename_base = f"{artist_prefix_for_dir}_{title_suffix_for_file}"
-            merged_file_path, _ = download_and_merge_song(
+
+            merged_ts_path, _ = download_and_merge_song(
                 m3u8_url_result, artist_specific_download_dir, output_filename_base
             )
-            if merged_file_path:
-                print_success(f"歌曲已合併到: {merged_file_path}")
-                song_duration = get_song_duration_ffmpeg(merged_file_path)
-            else:
-                print_error(f"歌曲 '{title}' 下載或合併失敗。")
-        else:
-            print_warning(f"歌曲 '{title}' 因無法獲取 m3u8 URL 而跳過下載。")
-        song_db_entry = {
-            "song_id": song_info_item.get("song_id"), 
-            "title": title, 
-            "artist_name": artist,
-            "duration_seconds": round(song_duration) if song_duration is not None else None,
-            "local_file_path": merged_file_path,
-            "source_page_url": song_info_item.get("song_page_url"),
-            "m3u8_url_found": m3u8_url_result,
-        }
-        return song_db_entry
 
+            if merged_ts_path:
+                # *** 核心修改點在這裡 ***
+                # 直接複製 song_info_item，保留所有已有欄位 (如 playlist_title)
+                song_db_entry_template = song_info_item.copy()
+                # 更新或添加新欄位
+                song_db_entry_template.update({
+                    "m3u8_url_found": m3u8_url_result,
+                    "local_file_path": None, # 由工人執行緒填寫
+                    "duration_seconds": None,  # 由工人執行緒填寫
+                })
+                
+                converted_mp4_path = os.path.join(artist_specific_download_dir, f"{output_filename_base}.mp4")
+                job = (merged_ts_path, converted_mp4_path, song_db_entry_template)
+                conversion_queue.put(job)
+                print_debug(f"已將 '{title}' 的轉碼任務放入佇列。")
+                return True
+        
+        print_warning(f"歌曲 '{title}' 因無法獲取 m3u8 URL 或下載失敗而跳過。")
+        return False
+    
     def crawl(self, max_songs_to_crawl=10, crawl_in_order=True, perform_download_and_save=True):
+        """
+        爬蟲流程的總控制方法。
+        現在它會協調主執行緒（下載）和工人執行緒（轉檔）。
+        """
         if not self._initialize_driver():
             return []
 
         self._load_previously_crawled_data()
-        crawled_data_this_run = []
+        
+        # --- 步驟 1: 設定多執行緒環境 ---
+        conversion_queue = queue.Queue()
+        final_crawled_data = [] # 用於存放工人執行緒處理完的最終結果
+        lock = threading.Lock() # 確保多個執行緒能安全地寫入 final_crawled_data
+        threads = []
 
+        print_info(f"正在啟動 {self.num_worker_threads} 個轉碼工人執行緒...")
+        for _ in range(self.num_worker_threads):
+            # 建立工人執行緒，傳入佇列、最終結果列表和鎖
+            t = threading.Thread(target=conversion_worker, args=(conversion_queue, final_crawled_data, lock))
+            t.daemon = True # 設置為守護執行緒
+            t.start()
+            threads.append(t)
+        # ---
+
+        # --- 步驟 2: 獲取要處理的項目清單 (這部分邏輯不變) ---
         fetch_limit = None
         if max_songs_to_crawl is not None:
-            # 為了過濾掉已爬取項目，預先多抓取一些
             fetch_limit = max_songs_to_crawl + len(self.previously_crawled_ids) + 20
         
         all_potential_items = self._fetch_all_items(fetch_limit)
         
         if not all_potential_items:
-            print_info("未能獲取任何項目資訊，流程結束。")
-            if self.driver: self.driver.quit()
-            return []
+            print_info("未能獲取任何項目資訊，準備結束流程。")
+        else:
+            actual_items_to_process = [
+                item for item in all_potential_items if item.get("song_id") not in self.previously_crawled_ids
+            ]
+            if not crawl_in_order:
+                print_info("選項設定為「隨機順序」，正在打亂項目處理順序...")
+                random.shuffle(actual_items_to_process)
+            
+            if max_songs_to_crawl is not None:
+                actual_items_to_process = actual_items_to_process[:max_songs_to_crawl]
+            
+            print_info(f"計畫處理 {len(actual_items_to_process)} 個新的項目。")
+            # ---
 
-        actual_items_to_process = [
-            item for item in all_potential_items if item.get("song_id") not in self.previously_crawled_ids
-        ]
-        if not crawl_in_order:
-            print_info("選項設定為「隨機順序」，正在打亂項目處理順序...")
-            random.shuffle(actual_items_to_process)
+            # --- 步驟 3: 主執行緒迴圈，僅提交下載任務到佇列 ---
+            for i, item_info in enumerate(actual_items_to_process):
+                print_info(f"\n--- 主執行緒正在處理項目 {i+1}/{len(actual_items_to_process)} ---")
+                current_identifier = item_info.get("song_id")
+                if current_identifier in self.processed_identifiers_runtime:
+                    print_info(f"項目 '{current_identifier}' 在本次運行中已處理過，跳過。")
+                    continue
+                
+                # 這個方法現在只會把下載合併後的轉碼任務丟進佇列，不會阻塞
+                success = self._process_single_song_download(item_info, conversion_queue)
+                
+                if success:
+                    self.processed_identifiers_runtime.add(current_identifier)
+                
+                print_info(f"--- 主執行緒處理完畢，繼續下載下一個 ---")
         
-        if max_songs_to_crawl is not None:
-            actual_items_to_process = actual_items_to_process[:max_songs_to_crawl]
+        # --- 步驟 4: 等待所有背景工作完成 ---
+        print_info("所有下載任務已提交，正在等待背景轉碼完成...")
         
-        print_info(f"計畫處理 {len(actual_items_to_process)} 個新的項目。")
+        # 放入結束信號 (None)，告訴所有工人執行緒可以下班了
+        for _ in range(self.num_worker_threads):
+            conversion_queue.put(None)
+        
+        # 等待佇列中的所有項目都被 .task_done() 標記為完成
+        # 這會阻塞主執行緒，直到所有轉碼任務結束
+        conversion_queue.join()
+        print_success("所有背景轉碼任務已完成！")
+        # ---
 
-        for i, item_info in enumerate(actual_items_to_process):
-            print_info(f"\n--- 正在處理新項目 {i+1}/{len(actual_items_to_process)} ---")
-            current_identifier = item_info.get("song_id")
-            if current_identifier in self.processed_identifiers_runtime:
-                print_info(f"項目 '{current_identifier}' 在本次運行中已處理過，跳過。")
-                continue
-            
-            processed_entry = self._process_single_song_download(item_info)
-            
-            if processed_entry:
-                crawled_data_this_run.append(processed_entry)
-                self.processed_identifiers_runtime.add(current_identifier)
-                if perform_download_and_save:
-                    self._save_crawled_data(processed_entry)
-            
-            print_info("--- 處理完畢 ---")
-        
+        # --- 步驟 5: 收尾與儲存結果 ---
         if self.driver:
             print_info("正在關閉 WebDriver...")
             self.driver.quit()
             self.driver = None
 
-        print_info(f"\n爬取流程完成。本次運行實際處理並記錄了 {len(crawled_data_this_run)} 個新的項目資訊。")
-        if perform_download_and_save and crawled_data_this_run:
+        print_info(f"\n爬取流程完成。本次運行總共處理了 {len(final_crawled_data)} 個項目。")
+        
+        if perform_download_and_save and final_crawled_data:
+            print_info(f"正在將 {len(final_crawled_data)} 筆結果寫入檔案...")
+            # 此時 final_crawled_data 已經被所有工人執行緒填滿
+            for entry in final_crawled_data:
+                self._save_crawled_data(entry)
             print_success(f"詳細資訊已附加到檔案: {self.output_filepath}")
         
-        return crawled_data_this_run
+        return final_crawled_data
 
     def _fetch_all_items(self, max_count):
         raise NotImplementedError("子類必須實現 _fetch_all_items 方法。")
+    
+# ============================================================
+#                     工人執行緒目標函式
+# ============================================================
+def conversion_worker(q, final_results_list, lock):
+    """
+    這是一個工人執行緒的目標函式。
+    它會不斷從佇列 q 中獲取任務並執行轉碼。
+    """
+    while True:
+        try:
+            # 從佇列中獲取一個任務，如果佇列是空的，它會在這裡等待
+            job = q.get()
+
+            # 如果收到 None，代表工作已全部結束，可以關閉這個工人
+            if job is None:
+                break
+
+            # 解開任務包
+            merged_ts_path, converted_mp4_path, song_db_entry_template = job
+            
+            # 執行轉碼
+            final_file_path = BaseCrawler.convert_to_mp4_ffmpeg(merged_ts_path, converted_mp4_path)
+
+            if final_file_path:
+                # 轉碼成功，更新這首歌的資料
+                song_db_entry_template["local_file_path"] = final_file_path
+                song_db_entry_template["duration_seconds"] = round(get_song_duration_ffmpeg(final_file_path) or 0)
+                
+                # 清理原始的 .ts 檔
+                try:
+                    os.remove(merged_ts_path)
+                except OSError as e:
+                    print_warning(f"刪除中繼 .ts 檔案失敗: {e}")
+            else:
+                # 轉碼失敗，保留 .ts 檔路徑
+                print_error(f"歌曲 '{song_db_entry_template['title']}' 轉碼失敗。")
+                song_db_entry_template["local_file_path"] = merged_ts_path
+
+            # 使用鎖來安全地將最終結果添加到共享列表中
+            with lock:
+                final_results_list.append(song_db_entry_template)
+
+        except Exception as e:
+            print_error(f"工人執行緒發生未預期錯誤: {e}")
+        finally:
+            # 務必告訴佇列，一個任務已經完成了
+            q.task_done()

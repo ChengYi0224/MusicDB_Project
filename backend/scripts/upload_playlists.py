@@ -94,7 +94,15 @@ def process_playlists():
                         if not artist: continue
                         
                         local_path = song_data.get('local_file_path')
-                        storage_path = f"songs/{artist.user_id}/{song_id_str}.ts"
+                        if not local_path or not os.path.exists(local_path):
+                            print_warning(f"找不到本地檔案: {local_path}，跳過歌曲 '{song_data.get('title')}'。")
+                            continue
+                        
+                        # 動態獲取副檔名
+                        _, file_extension = os.path.splitext(local_path)
+                        
+                        # 組合新的、正確的 storage_path
+                        storage_path = f"songs/{artist.user_id}/{song_id_str}{file_extension}"
                         public_url = upload_file_to_storage(supabase_client, local_path, storage_path)
                         if not public_url: continue
 
