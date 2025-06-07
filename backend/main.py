@@ -1,18 +1,22 @@
 from app import create_app#, db
 from flask_migrate import Migrate
-from app.utils import Has_IPv6_Addr
+from app.utils.network import Check_IPv6_Dialogue
+from wsgiserver import WSGIServer
 
 # 程式入口
 if __name__ == "__main__":
     app = create_app()
     #migrate = Migrate(app, db)
-    print("正在檢查本機是否支援 IPv6...")
-    if not Has_IPv6_Addr():
-        print("本機不支援 IPv6，強制啟動將無法連線資料庫。")
-        print("是否強制啟動？(y/n): ", end="")
-        force = input().strip().lower() == 'y'
-        if not force:
-            exit(1)
-    
-    app.run(debug=True)
+    if Check_IPv6_Dialogue():
+        HOST = '0.0.0.0'  # 監聽所有可用的網路介面，讓 playit.gg 可以連線
+        PORT = 5000       # 您希望 WSGIserver 監聽的埠口
+
+        print(f"啟動 Flask 應用程式，使用 WSGIserver 監聽在 {HOST}:{PORT}")
+        server = WSGIServer(app, host=HOST, port=PORT)
+        try:
+            server.start() # 啟動伺服器
+        except KeyboardInterrupt:
+            server.stop()  # 停止伺服器
+            print("\nWSGIserver 已停止。")
+        
     
