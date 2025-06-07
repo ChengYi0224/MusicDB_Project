@@ -39,7 +39,9 @@
 
         <ul class="list-group list-group-flush">
             {% for song in playlist.songs %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
+            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center playable-song"
+                style="cursor: pointer;" data-file-url="{{ song.file_url }}" data-title="{{ song.title }}"
+                data-artist="{{ song.user.username if song.user else '未知作者' }}">
                 <div>
                     <div class="fw-bold">{{ song.title }}</div>
                     <small class="text-muted">{{ song.user.username if song.user else '未知作者' }}</small>
@@ -52,7 +54,43 @@
         </ul>
     </div>
 
+    <div style="height: 120px;"></div>
+
+    <div id="music-player-bar"
+        style="position: fixed; bottom: 0; width: 100%; background-color: #f8f9fa; padding: 10px; border-top: 1px solid #dee2e6; z-index: 1030;">
+        <div class="container">
+            <div id="player-info" class="mb-2">
+                <span id="now-playing-info">🎵 點擊一首歌曲來播放</span>
+            </div>
+            <audio id="audio-player" controls class="w-100"></audio>
+        </div>
+    </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const audioPlayer = document.getElementById('audio-player');
+            const nowPlayingInfo = document.getElementById('now-playing-info');
+
+            // 使用事件委派，監聽整個文件的點擊事件
+            document.addEventListener('click', function (event) {
+                const songCard = event.target.closest('.playable-song');
+
+                if (audioPlayer && songCard) {
+                    const fileUrl = songCard.dataset.fileUrl;
+                    const title = songCard.dataset.title;
+                    const artist = songCard.dataset.artist;
+
+                    if (fileUrl) {
+                        audioPlayer.src = fileUrl;
+                        audioPlayer.play();
+                        nowPlayingInfo.innerHTML = `🎵 現正播放: <strong>${title} - ${artist}</strong>`;
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

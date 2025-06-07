@@ -162,9 +162,44 @@
         </div>
         {% endif %}
 
-        {% if results %}
+        <!-- 如果有query，顯示搜尋結果 -->
+        {% if query %}
+        <div class="mb-5">
+            <h2 class="mb-4">關於 "{{ query }}" 的搜尋結果</h2>
+            <div class="list-group">
+                {% for result in results %}
+                {% if result.type == '歌曲' %}
+                {# 為「歌曲」產生可播放的 DIV，點擊後觸發播放器，沒有連結功能 #}
+                <div class="list-group-item list-group-item-action playable-song" style="cursor: pointer;"
+                    data-file-url="{{ result.file_url }}" data-title="{{ result.title }}"
+                    data-artist="{{ result.artist_name }}">
+        
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ result.title }}</h5>
+                        <small class="text-muted">{{ result.type }}</small>
+                    </div>
+                    <p class="mb-1">{{ result.artist_name }}</p>
+                </div>
+                {% else %}
+                {# 其他非歌曲的類型 (如專輯)，則顯示為一個無法點擊的普通項目 #}
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ result.title }}</h5>
+                        <small class="text-muted">{{ result.type }}</small>
+                    </div>
+                    <p class="mb-1">{{ result.artist_name | default('未知創作者') }}</p>
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="list-group-item">
+                    <p class="mb-0">找不到任何符合 "{{ query }}" 的結果。</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
         {% endif %}
 
+        {% if not query %}
         <h3 class="mb-3">熱門歌曲</h3>
         <div class="scrolling-wrapper-container">
             <button class="scroll-btn left-arrow" id="song-left-arrow">‹</button>
@@ -195,6 +230,7 @@
             </div>
             <button class="scroll-btn right-arrow" id="playlist-right-arrow">›</button>
         </div>
+        {% endif %}
     </div>
     
     <div style="height: 120px;"></div>
@@ -210,15 +246,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // 水平捲動的功能 (這部分是正確的，不用改)
+            // 水平捲動的功能 (這部分維持不變)
             function setupScroller(containerId, leftBtnId, rightBtnId) {
                 const container = document.getElementById(containerId);
                 const leftBtn = document.getElementById(leftBtnId);
                 const rightBtn = document.getElementById(rightBtnId);
-                if (!container) return; // 防呆
+                if (!container || !leftBtn || !rightBtn) return;
                 const scrollAmount = container.offsetWidth * 0.8;
-
-                if (!leftBtn || !rightBtn) return;
 
                 leftBtn.addEventListener('click', () => {
                     container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
@@ -231,28 +265,30 @@
 
             setupScroller('songs-container', 'song-left-arrow', 'song-right-arrow');
             setupScroller('playlists-container', 'playlist-left-arrow', 'playlist-right-arrow');
-            
-            // 播放功能的 JavaScript (這部分也是正確的，不用改)
+
+            // ---【播放功能修正】---
             const audioPlayer = document.getElementById('audio-player');
             const nowPlayingInfo = document.getElementById('now-playing-info');
-            const songsContainer = document.getElementById('songs-container');
 
-            // 防呆：確認播放器和歌曲容器都存在
-            if (audioPlayer && nowPlayingInfo && songsContainer) {
-                songsContainer.addEventListener('click', function (event) {
-                    const songCard = event.target.closest('.playable-song');
-                    if (songCard) {
-                        const fileUrl = songCard.dataset.fileUrl;
-                        const title = songCard.dataset.title;
-                        const artist = songCard.dataset.artist;
+            // 將監聽器從 'songs-container' 改為整個 'document'
+            document.addEventListener('click', function (event) {
+                // 尋找被點擊元素或其父層中，最近的 .playable-song
+                const songCard = event.target.closest('.playable-song');
 
+                // 確認 audioPlayer 存在，且確實點擊到了可播放的歌曲卡片
+                if (audioPlayer && songCard) {
+                    const fileUrl = songCard.dataset.fileUrl;
+                    const title = songCard.dataset.title;
+                    const artist = songCard.dataset.artist;
+
+                    // 檢查 fileUrl 是否存在，避免錯誤
+                    if (fileUrl) {
                         audioPlayer.src = fileUrl;
                         audioPlayer.play();
-
                         nowPlayingInfo.innerHTML = `🎵 現正播放: <strong>${title} - ${artist}</strong>`;
                     }
-                });
-            }
+                }
+            });
         });
     </script>
 </body>

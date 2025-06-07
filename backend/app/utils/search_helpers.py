@@ -1,6 +1,7 @@
 from sqlalchemy import case, func
 # 如果輔助函數需要直接使用模型，可以在這裡導入，或者將模型作為參數傳入
 # from ..models import Song, User # 假設的導入路徑
+from sqlalchemy.orm import joinedload
 
 def _calculate_song_relevance_score(SongModel, query_string, search_term_exact, search_term_starts_with, search_term_contains):
     """計算歌曲標題的相關性分數 (輔助內部使用或獨立使用)"""
@@ -30,6 +31,7 @@ def find_songs_by_title(db_session, SongModel, UserModel, query_string):
 
     ordered_songs = db_session.query(SongModel)\
         .join(UserModel, SongModel.user_id == UserModel.user_id)\
+        .options(joinedload(SongModel.user))\
         .filter(SongModel.is_public == True)\
         .filter(SongModel.title.ilike(search_term_contains))\
         .order_by(relevance_expr.desc(), SongModel.title.asc())\
@@ -41,8 +43,8 @@ def find_songs_by_title(db_session, SongModel, UserModel, query_string):
             'type': '歌曲',
             'id': song.song_id,
             'title': song.title,
-            'artist_name': song.artist.username if hasattr(song, 'artist') and song.artist else "未知歌手",
-            'url': f"/songs/{song.song_id}"
+            'artist_name': song.user.username if song.user else "未知歌手",
+            'file_url': song.file_url
         })
     return results
 
