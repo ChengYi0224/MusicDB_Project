@@ -6,6 +6,7 @@ from wsgiserver import WSGIServer
 # 程式入口
 if __name__ == "__main__":
     app = create_app()
+    app.debug = True  # 啟用除錯模式
     #migrate = Migrate(app, db)
     if Check_IPv6_Dialogue():
         HOST = '0.0.0.0'  # 監聽所有可用的網路介面，讓 playit.gg 可以連線

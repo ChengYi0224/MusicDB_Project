@@ -112,7 +112,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <img src="{{ url_for('static', filename='PureIcon.png') }}" alt="Logo" style="height: 40px;"
+                <img src="https://jhdsifyqyxgrioeuloef.supabase.co/storage/v1/object/public/static//PureIcon.png" alt="Logo" style="height: 40px;"
                     class="me-2">
                 <span class="fw-bold fs-5">SoundBase</span>
             </a>
@@ -126,7 +126,7 @@
                     <input class="form-control border-0 bg-secondary text-white ps-4" type="search" name="q"
                         placeholder="搜尋音樂、專輯..." aria-label="Search" style="font-size: 1rem;">
                     <button class="btn bg-secondary border-0 pe-3" type="submit">
-                        <img src="{{ url_for('static', filename='search-icon.png') }}" alt="搜尋"
+                        <img src="https://jhdsifyqyxgrioeuloef.supabase.co/storage/v1/object/public/static//search-icon.png" alt="搜尋"
                             style="height: 24px; width: 24px;">
                     </button>
                 </form>
@@ -157,7 +157,7 @@
     <div class="container mt-5 mb-5">
         {% if not query and not results %}
         <div class="text-center mb-5">
-            <h1 class="mb-4">歡迎來到音樂資料庫系統</h1>
+            <h1 class="mb-4">歡迎來到SoundBase</h1>
             <p class="lead">探索、管理與播放您的音樂收藏。</p>
         </div>
         {% endif %}
@@ -181,13 +181,23 @@
                     <p class="mb-1">{{ result.artist_name }}</p>
                 </div>
         
-                {# 【新增判斷】判斷2：處理後端回傳的「找不到結果」的特殊提示項目 #}
+                {# 【新增判斷】判斷2：如果結果是播放清單，讓它可以被點擊 #}
+                {% elif result.type == '播放清單' %}
+                <a href="{{ result.url }}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ result.title }}</h5>
+                        <small class="text-muted">{{ result.type }}</small>
+                    </div>
+                    <p class="mb-1">由 {{ result.artist_name | default('未知創作者') }} 建立</p>
+                </a>
+        
+                {# 判斷3：處理後端回傳的「找不到結果」的特殊提示項目 #}
                 {% elif result.type == '提示' %}
                 <div class="list-group-item">
                     <p class="mb-0">找不到任何符合 "{{ query }}" 的結果。</p>
                 </div>
         
-                {# 判斷3：其他非歌曲的正常結果 (例如未來的專輯或播放清單) #}
+                {# 判斷4：其他非歌曲的正常結果 (例如未來的專輯) #}
                 {% else %}
                 <div class="list-group-item">
                     <div class="d-flex w-100 justify-content-between">
@@ -198,7 +208,7 @@
                 </div>
                 {% endif %}
         
-                {# Fallback: 如果後端某天修正了，回傳真正的空列表，這個 else 依然能正常運作 #}
+                {# Fallback: 如果後端回傳真正的空列表 #}
                 {% else %}
                 <div class="list-group-item">
                     <p class="mb-0">找不到任何符合 "{{ query }}" 的結果。</p>
@@ -214,10 +224,10 @@
             <button class="scroll-btn left-arrow" id="song-left-arrow">‹</button>
             <div class="scrolling-wrapper" id="songs-container">
                 {% for song in songs %}
-                <div class="card item-card playable-song" data-file-url="{{ song.file_url }}" data-title="{{ song.title }}"
+                <div class="card item-card playable-song" style="cursor: pointer;" data-file-url="{{ song.file_url }}" data-title="{{ song.title }}"
                     data-artist="{{ song.user.username if song.user else '未知作者' }}">
-                    <h5 class="card-title text-truncate">{{ song.title }}</h5>
-                    <p class="card-text text-muted">{{ song.user.username if song.user else '未知作者' }}</p>
+                    <h5 class="card-title text-truncate" alt="{{ song.title }}">{{ song.title }}</h5>
+                    <p class="card-text text-muted" alt="{{ song.user.username if song.user else '' }}">{{ song.user.username if song.user else '未知作者' }}</p>
                 </div>
                 {% endfor %}
             </div>
