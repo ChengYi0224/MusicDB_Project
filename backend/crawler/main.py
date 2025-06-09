@@ -20,7 +20,7 @@ if __name__ == "__main__":
     playlist_crawler = PlaylistCrawler()
 
     # --- 爬取歌單中的所有歌曲 ---
-    max_playlists = 4
+    max_playlists = 5
     max_songs_playlist = None
     print_info(f"--- 爬取 {max_playlists} 個歌單的所有歌曲 ---")
     crawled_data = playlist_crawler.crawl(

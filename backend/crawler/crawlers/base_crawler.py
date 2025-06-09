@@ -43,25 +43,27 @@ class LogLevel(Enum):
 
 CURRENT_LOG_LEVEL = LogLevel.INFO
 
+# 檔案最上方確保 from tqdm import tqdm 存在
+
 def print_error(message):
     if CURRENT_LOG_LEVEL.value >= LogLevel.ERROR.value:
-        print(f"{AnsiColors.RED}{AnsiColors.BOLD}[錯誤] {message}{AnsiColors.ENDC}")
+        tqdm.write(f"{AnsiColors.RED}{AnsiColors.BOLD}[錯誤] {message}{AnsiColors.ENDC}")
 
 def print_warning(message):
     if CURRENT_LOG_LEVEL.value >= LogLevel.WARNING.value:
-        print(f"{AnsiColors.RED}{AnsiColors.BOLD}[警告]{AnsiColors.ENDC} {message}")
+        tqdm.write(f"{AnsiColors.RED}{AnsiColors.BOLD}[警告]{AnsiColors.ENDC} {message}")
 
 def print_success(message):
     if CURRENT_LOG_LEVEL.value >= LogLevel.SUCCESS.value:
-        print(f"{AnsiColors.YELLOW}[成功]{AnsiColors.ENDC} {message}")
+        tqdm.write(f"{AnsiColors.YELLOW}[成功]{AnsiColors.ENDC} {message}")
 
 def print_info(message):
     if CURRENT_LOG_LEVEL.value >= LogLevel.INFO.value:
-        print(f"{AnsiColors.BLUE}{message}{AnsiColors.ENDC}")
+        tqdm.write(f"{AnsiColors.BLUE}{message}{AnsiColors.ENDC}")
 
 def print_debug(message):
     if CURRENT_LOG_LEVEL.value >= LogLevel.DEBUG.value:
-        print(f"{AnsiColors.GREEN}[除錯]{AnsiColors.ENDC} {message}")
+        tqdm.write(f"{AnsiColors.GREEN}[除錯]{AnsiColors.ENDC} {message}")
 
 # --- 常數 ---
 TARGET_SITE_DOMAIN = "https://streetvoice.com"
@@ -95,11 +97,15 @@ def setup_driver():
     edge_options.add_argument("--disable-dev-shm-usage")
     edge_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36 Edg/98.0.1108.62")
 
+    edge_options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    service_args = ['--log-level=3']
+
     if MSEDGEDRIVER_PATH:
-        service = EdgeService(executable_path=MSEDGEDRIVER_PATH)
+        service = EdgeService(executable_path=MSEDGEDRIVER_PATH, service_args=service_args)
         driver = webdriver.Edge(service=service, options=edge_options)
     else:
         try:
+            service = EdgeService(service_args=service_args)
             driver = webdriver.Edge(options=edge_options)
         except WebDriverException as e:
             print_error(f"無法初始化 EdgeDriver: {e}")
@@ -400,71 +406,78 @@ class BaseCrawler:
         # ---
 
         # --- 步驟 2: 獲取要處理的項目清單 (這部分邏輯不變) ---
-        fetch_limit = None
-        if max_songs_to_crawl is not None:
-            fetch_limit = max_songs_to_crawl + len(self.previously_crawled_ids) + 20
-        
-        all_potential_items = self._fetch_all_items(fetch_limit)
-        
-        if not all_potential_items:
-            print_info("未能獲取任何項目資訊，準備結束流程。")
-        else:
-            actual_items_to_process = [
-                item for item in all_potential_items if item.get("song_id") not in self.previously_crawled_ids
-            ]
-            if not crawl_in_order:
-                print_info("選項設定為「隨機順序」，正在打亂項目處理順序...")
-                random.shuffle(actual_items_to_process)
-            
+        try:
+            fetch_limit = None
             if max_songs_to_crawl is not None:
-                actual_items_to_process = actual_items_to_process[:max_songs_to_crawl]
+                fetch_limit = max_songs_to_crawl + len(self.previously_crawled_ids) + 20
             
-            print_info(f"計畫處理 {len(actual_items_to_process)} 個新的項目。")
+            all_potential_items = self._fetch_all_items(fetch_limit)
+            
+            if not all_potential_items:
+                print_info("未能獲取任何項目資訊，準備結束流程。")
+            else:
+                actual_items_to_process = [
+                    item for item in all_potential_items if item.get("song_id") not in self.previously_crawled_ids
+                ]
+                if not crawl_in_order:
+                    print_info("選項設定為「隨機順序」，正在打亂項目處理順序...")
+                    random.shuffle(actual_items_to_process)
+                
+                if max_songs_to_crawl is not None:
+                    actual_items_to_process = actual_items_to_process[:max_songs_to_crawl]
+                
+                print_info(f"計畫處理 {len(actual_items_to_process)} 個新的項目。")
+                # ---
+
+                # --- 步驟 3: 主執行緒迴圈，僅提交下載任務到佇列 ---
+                for item_info in tqdm(actual_items_to_process, desc="提交下載/轉碼任務"):
+                    
+                    current_identifier = item_info.get("song_id")
+                    if current_identifier in self.processed_identifiers_runtime:
+                        print_info(f"項目 '{current_identifier}' 在本次運行中已處理過，跳過。")
+                        continue
+                    
+                    # 這個方法現在只會把下載合併後的轉碼任務丟進佇列，不會阻塞
+                    success = self._process_single_song_download(item_info, conversion_queue)
+                    
+                    if success:
+                        self.processed_identifiers_runtime.add(current_identifier)
+        except KeyboardInterrupt:
+            # 如果用戶按下 Ctrl+C，則終止爬取流程
+            print_warning("\n\n偵測到使用者中斷 (Ctrl+C)，準備儲存已完成的工作...")
+            interrupted = True
+
+        finally:
+            # --- 步驟 4: 等待所有背景工作完成 ---
+            if interrupted:
+                print_warning("爬取流程被中斷，正在儲存已完成的工作...")
+            else:
+                print_info("爬取流程已完成，正在等待背景轉碼任務結束...")
+            
+            # 放入結束信號 (None)，告訴所有工人執行緒可以下班了
+            for _ in range(self.num_worker_threads):
+                conversion_queue.put(None)
+            
+            # 等待佇列中的所有項目都被 .task_done() 標記為完成
+            # 這會阻塞主執行緒，直到所有轉碼任務結束
+            conversion_queue.join()
+            print_success("所有背景轉碼任務已完成！")
             # ---
 
-            # --- 步驟 3: 主執行緒迴圈，僅提交下載任務到佇列 ---
-            for i, item_info in enumerate(actual_items_to_process):
-                print_info(f"\n--- 主執行緒正在處理項目 {i+1}/{len(actual_items_to_process)} ---")
-                current_identifier = item_info.get("song_id")
-                if current_identifier in self.processed_identifiers_runtime:
-                    print_info(f"項目 '{current_identifier}' 在本次運行中已處理過，跳過。")
-                    continue
-                
-                # 這個方法現在只會把下載合併後的轉碼任務丟進佇列，不會阻塞
-                success = self._process_single_song_download(item_info, conversion_queue)
-                
-                if success:
-                    self.processed_identifiers_runtime.add(current_identifier)
-                
-                print_info(f"--- 主執行緒處理完畢，繼續下載下一個 ---")
-        
-        # --- 步驟 4: 等待所有背景工作完成 ---
-        print_info("所有下載任務已提交，正在等待背景轉碼完成...")
-        
-        # 放入結束信號 (None)，告訴所有工人執行緒可以下班了
-        for _ in range(self.num_worker_threads):
-            conversion_queue.put(None)
-        
-        # 等待佇列中的所有項目都被 .task_done() 標記為完成
-        # 這會阻塞主執行緒，直到所有轉碼任務結束
-        conversion_queue.join()
-        print_success("所有背景轉碼任務已完成！")
-        # ---
+            # --- 步驟 5: 收尾與儲存結果 ---
+            if self.driver:
+                print_info("正在關閉 WebDriver...")
+                self.driver.quit()
+                self.driver = None
 
-        # --- 步驟 5: 收尾與儲存結果 ---
-        if self.driver:
-            print_info("正在關閉 WebDriver...")
-            self.driver.quit()
-            self.driver = None
-
-        print_info(f"\n爬取流程完成。本次運行總共處理了 {len(final_crawled_data)} 個項目。")
-        
-        if perform_download_and_save and final_crawled_data:
-            print_info(f"正在將 {len(final_crawled_data)} 筆結果寫入檔案...")
-            # 此時 final_crawled_data 已經被所有工人執行緒填滿
-            for entry in final_crawled_data:
-                self._save_crawled_data(entry)
-            print_success(f"詳細資訊已附加到檔案: {self.output_filepath}")
+            print_info(f"\n爬取流程完成。本次運行總共處理了 {len(final_crawled_data)} 個項目。")
+            
+            if perform_download_and_save and final_crawled_data:
+                print_info(f"正在將 {len(final_crawled_data)} 筆結果寫入檔案...")
+                # 此時 final_crawled_data 已經被所有工人執行緒填滿
+                for entry in final_crawled_data:
+                    self._save_crawled_data(entry)
+                print_success(f"詳細資訊已附加到檔案: {self.output_filepath}")
         
         return final_crawled_data
 
