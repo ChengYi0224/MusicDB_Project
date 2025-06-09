@@ -57,16 +57,18 @@
 
 此程式用於從指定來源抓取音樂相關資料。
 目前爬取兩種資料:songs以及playlist
-可以在以下的`main.py`檔案中調整參數
+可以在的`backend/crawler/main.py`檔案中調整參數
+* **max_playlists**: 爬取歌單數量
+* **max_songs_playlist**: 爬取歌單時，爬取的歌曲當達到這個值，會中斷歌單爬蟲。設定則None則無限制
+* **max_song**: 爬取歌曲時，如果達到這個值，則停止歌曲爬蟲。不得設置為None
+
 
 **指令：**
 ```bash
 py -m backend.crawler.main
 ```
 
-**說明：**
-* `py -m`: 使用 `-m` 旗標可以讓 Python 將當前目錄（專案根目錄）視為頂層套件，從而正確找到 `backend.crawler.main` 模組，避免發生 `ModuleNotFoundError`。
-* 執行後，爬蟲會開始運作，抓取的結果可能會存儲在指定的檔案或直接寫入資料庫，具體行為取決於程式碼的實現。
+* 執行後，爬蟲會開始運作，抓取的結果會儲存在`backend/crawler`的`crawled_results`以及`downloads`資料夾。
 
 ---
 
@@ -91,6 +93,7 @@ py -m backend.scripts.upload_songs
 
 ### 啟動
 確認虛擬環境已啟動且依賴套件皆安裝後，執行以下指令：
+> ⚠️ 請確認自己電腦**是否支援IPv6**，伺服器存取只支援IPv6連線
 ```bash
 py .\backend\main.py
 ```
