@@ -86,3 +86,18 @@ py -m backend.crawler.main
 py -m backend.scripts.upload_playlists
 py -m backend.scripts.upload_songs
 ```
+
+## 伺服器運行
+
+### 啟動
+確認虛擬環境已啟動且依賴套件皆安裝後，執行以下指令：
+```bash
+py .\backend\main.py
+```
+
+### 連線方式
+* **本地連線**：使用 `localhost:5000`。
+* **網際網路連線**：需設定內網穿透，例如 Port forwarding 或使用 Tunnel 服務（如 playit.gg）。
+
+### 關閉
+在 bash 視窗中按下 **`Ctrl+C`**。
