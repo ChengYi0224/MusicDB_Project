@@ -162,7 +162,7 @@
         </div>
         {% endif %}
 
-        <!-- 如果有query，顯示搜尋結果 -->
+
         {% if query %}
         <div class="mb-5">
             <h2 class="mb-4">關於 "{{ query }}" 的搜尋結果</h2>
@@ -265,7 +265,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // 水平捲動的功能 (這部分維持不變)
+            // 水平捲動的功能
             function setupScroller(containerId, leftBtnId, rightBtnId) {
                 const container = document.getElementById(containerId);
                 const leftBtn = document.getElementById(leftBtnId);
@@ -285,11 +285,10 @@
             setupScroller('songs-container', 'song-left-arrow', 'song-right-arrow');
             setupScroller('playlists-container', 'playlist-left-arrow', 'playlist-right-arrow');
 
-            // ---【播放功能修正】---
             const audioPlayer = document.getElementById('audio-player');
             const nowPlayingInfo = document.getElementById('now-playing-info');
 
-            // 將監聽器從 'songs-container' 改為整個 'document'
+            // 監聽document
             document.addEventListener('click', function (event) {
                 // 尋找被點擊元素或其父層中，最近的 .playable-song
                 const songCard = event.target.closest('.playable-song');
