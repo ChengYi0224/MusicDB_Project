@@ -14,6 +14,9 @@ class Config:
     SECRET_KEY = "MusicDB_SECRET_KEY"
     SUPABASE_URL = "https://jhdsifyqyxgrioeuloef.supabase.co"
     SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpoZHNpZnlxeXhncmlvZXVsb2VmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NTQ3MTQ4NSwiZXhwIjoyMDYxMDQ3NDg1fQ._1cKXAkU-DivSuw8Hem66DW-A0ValsOR1ucZq-9zX_I"
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_pre_ping': True
+    }
 
 
 # =========== 處理crawler輸出檔案的路徑 ==========
