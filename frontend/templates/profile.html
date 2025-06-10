@@ -78,9 +78,11 @@
                 </form>
 
                 <ul class="navbar-nav ms-lg-3">
+                    <!--
                     <li class="nav-item"><a class="nav-link" href="/albums">專輯</a></li>
                     <li class="nav-item"><a class="nav-link" href="/songs">歌曲</a></li>
                     <li class="nav-item"><a class="nav-link" href="/playlists">播放清單</a></li>
+                    -->
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{ url_for('user.user_profile') }}">
                             {% if user %}
@@ -154,6 +156,30 @@
                     {% else %}
                         <p class="text-muted">這位使用者尚未留下任何介紹。</p>
                     {% endif %}
+                </div>
+
+                <h4 class="section-header mt-4 mb-3">我的播放清單</h4>
+                <div class="list-group">
+                    {% for playlist in user.playlists %}
+                    <a href="{{ url_for('playlist.view_playlist', playlist_id=playlist.playlist_id) }}"
+                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="fw-bold">{{ playlist.title }}</span>
+                            <small class="text-muted ms-2">{{ playlist.songs|length }} 首歌曲</small>
+                        </div>
+                        <span>
+                            {% if playlist.is_public %}
+                            <span class="badge bg-success">公開</span>
+                            {% else %}
+                            <span class="badge bg-secondary">私密</span>
+                            {% endif %}
+                        </span>
+                    </a>
+                    {% else %}
+                    <div class="list-group-item">
+                        <p class="text-muted mb-0">尚未建立任何播放清單。</p>
+                    </div>
+                    {% endfor %}
                 </div>
 
                 <div class="mt-4 text-center">
