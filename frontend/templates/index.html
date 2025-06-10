@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>音樂資料庫系統</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://jhdsifyqyxgrioeuloef.supabase.co/storage/v1/object/public/static//PureIcon.png">
     <style>
         /* 播放器樣式 */
         #music-player-bar {
@@ -224,14 +225,47 @@
             <button class="scroll-btn left-arrow" id="song-left-arrow">‹</button>
             <div class="scrolling-wrapper" id="songs-container">
                 {% for song in songs %}
-                <div class="card item-card playable-song" style="cursor: pointer;" data-file-url="{{ song.file_url }}" data-title="{{ song.title }}"
-                    data-artist="{{ song.user.username if song.user else '未知作者' }}">
-                    <h5 class="card-title text-truncate" alt="{{ song.title }}">{{ song.title }}</h5>
-                    <p class="card-text text-muted" alt="{{ song.user.username if song.user else '' }}">{{ song.user.username if song.user else '未知作者' }}</p>
+                <div class="card item-card position-relative" data-song-id="{{ song.song_id }}">
+                    <div class="playable-song"
+                        style="cursor: pointer; flex-grow: 1; display: flex; flex-direction: column; justify-content: center;"
+                        data-file-url="{{ song.file_url }}" data-title="{{ song.title }}"
+                        data-artist="{{ song.user.username if song.user else '未知作者' }}">
+                        <h5 class="card-title text-truncate" title="{{ song.title }}">{{ song.title }}</h5>
+                        <p class="card-text text-muted" title="{{ song.user.username if song.user else '' }}">{{
+                            song.user.username if song.user else '未知作者' }}</p>
+                    </div>
+                    {% if user %}
+                    <button
+                        class="btn btn-sm btn-outline-primary rounded-circle position-absolute top-0 end-0 m-2 add-to-playlist-btn"
+                        title="新增至播放清單" style="width: 30px; height: 30px; line-height: 1;">+</button>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
             <button class="scroll-btn right-arrow" id="song-right-arrow">›</button>
+        </div>
+        <div class="modal fade" id="addToPlaylistModal" tabindex="-1" aria-labelledby="addToPlaylistModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addToPlaylistModalLabel">新增至播放清單</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="user-playlists-list" class="list-group mb-3">
+                        </div>
+                        <hr>
+                        <div class="mt-3">
+                            <label for="new-playlist-name" class="form-label">或建立一個新的播放清單</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="new-playlist-name" placeholder="新播放清單名稱">
+                                <button class="btn btn-outline-success" type="button" id="create-and-add-btn">建立並加入</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <h3 class="mt-5 mb-3">精選播放清單</h3>
@@ -307,6 +341,99 @@
                     }
                 }
             });
+
+            // --- 處理「新增至播放清單」功能 ---
+            const addToPlaylistModal = new bootstrap.Modal(document.getElementById('addToPlaylistModal'));
+            const userPlaylistsList = document.getElementById('user-playlists-list');
+            const newPlaylistNameInput = document.getElementById('new-playlist-name');
+            const createAndAddBtn = document.getElementById('create-and-add-btn');
+            let currentSongId = null;
+
+            // 1. 監聽所有「+」按鈕的點擊
+            document.getElementById('songs-container').addEventListener('click', async function (event) {
+                if (event.target.classList.contains('add-to-playlist-btn')) {
+                    const card = event.target.closest('.item-card');
+                    currentSongId = card.dataset.songId;
+
+                    // 清空舊的列表和輸入框
+                    userPlaylistsList.innerHTML = '<div class="text-center"><div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+                    newPlaylistNameInput.value = '';
+
+                    // 顯示 Modal
+                    addToPlaylistModal.show();
+
+                    // 透過 API 獲取使用者的播放清單
+                    try {
+                        const response = await fetch('/playlists/api/my-playlists');
+                        if (!response.ok) {
+                            if (response.status === 401) {
+                                userPlaylistsList.innerHTML = '<p class="text-danger">請先登入。</p>';
+                            } else {
+                                throw new Error('無法載入播放清單');
+                            }
+                            return;
+                        }
+                        const playlists = await response.json();
+
+                        // 動態產生播放清單列表
+                        userPlaylistsList.innerHTML = ''; // 清除 spinner
+                        if (playlists.length > 0) {
+                            playlists.forEach(p => {
+                                const item = document.createElement('button');
+                                item.type = 'button';
+                                item.className = 'list-group-item list-group-item-action';
+                                item.textContent = p.title;
+                                item.dataset.playlistId = p.id;
+                                userPlaylistsList.appendChild(item);
+                            });
+                        } else {
+                            userPlaylistsList.innerHTML = '<p class="text-muted">您尚未建立任何播放清單。</p>';
+                        }
+                    } catch (error) {
+                        userPlaylistsList.innerHTML = `<p class="text-danger">${error.message}</p>`;
+                    }
+                }
+            });
+
+            // 2. 監聽 Modal 中現有播放清單的點擊
+            userPlaylistsList.addEventListener('click', async function (event) {
+                const target = event.target;
+                if (target.matches('.list-group-item-action')) {
+                    const playlistId = target.dataset.playlistId;
+                    await sendAddRequest({ song_id: currentSongId, playlist_id: playlistId });
+                }
+            });
+
+            // 3. 監聽 Modal 中「建立並加入」按鈕的點擊
+            createAndAddBtn.addEventListener('click', async function () {
+                const newTitle = newPlaylistNameInput.value.trim();
+                if (newTitle) {
+                    await sendAddRequest({ song_id: currentSongId, new_playlist_title: newTitle });
+                } else {
+                    alert('請輸入新播放清單的名稱。');
+                }
+            });
+
+            // 4. 統一處理發送到後端的請求
+            async function sendAddRequest(body) {
+                try {
+                    const response = await fetch('/playlists/api/add-song', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        alert(result.message); // 簡單用 alert 提示成功
+                        addToPlaylistModal.hide();
+                    } else {
+                        alert(`錯誤: ${result.error}`); // 提示失敗原因
+                    }
+                } catch (error) {
+                    alert('發生網路錯誤，請稍後再試。');
+                }
+            }
         });
     </script>
 </body>

@@ -11,7 +11,6 @@ if __name__ == "__main__":
     
     if not Check_IPv6_Dialogue():
         exit(1)
-
     HOST = '0.0.0.0'  # 監聽所有可用的網路介面，讓 playit.gg 可以連線
     PORT = 5000       # 您希望 WSGIserver 監聽的埠口
 
@@ -23,5 +22,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         server.stop()  # 停止伺服器
         print("\nWSGIserver 已停止。")
+    
         
     

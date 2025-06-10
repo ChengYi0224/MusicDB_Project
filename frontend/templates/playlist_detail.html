@@ -13,21 +13,35 @@
             /* Bootstrap primary color */
         }
     </style>
+    {% if user and user.user_id == playlist.user_id %}
+    <style>
+        .sortable-list .list-group-item {
+            cursor: move;
+            /* or grab */
+        }
+
+        .sortable-ghost {
+            opacity: 0.4;
+            background: #c8ebfb;
+        }
+    </style>
+    {% endif %}
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <img src="https://jhdsifyqyxgrioeuloef.supabase.co/storage/v1/object/public/static//PureIcon.png" alt="Logo"
-                    style="height: 40px;" class="me-2">
+                <img src="https://jhdsifyqyxgrioeuloef.supabase.co/storage/v1/object/public/static//PureIcon.png"
+                    alt="Logo" style="height: 40px;" class="me-2">
                 <span class="fw-bold fs-5">SoundBase</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
-                <form method="get" action="/" class="d-flex mx-auto my-2 my-lg-0 bg-secondary rounded-pill overflow-hidden"
+                <form method="get" action="/"
+                    class="d-flex mx-auto my-2 my-lg-0 bg-secondary rounded-pill overflow-hidden"
                     style="max-width: 100%; width: 100%; max-width: 600px; height: 48px;">
                     <input class="form-control border-0 bg-secondary text-white ps-4" type="search" name="q"
                         placeholder="搜尋音樂、專輯..." aria-label="Search" style="font-size: 1rem;">
@@ -62,28 +76,37 @@
 
     <div class="container mt-5">
         <div class="d-flex align-items-center mb-4">
-            <div class="me-4">
-                <div class="bg-secondary text-white d-flex align-items-center justify-content-center"
-                    style="width: 180px; height: 180px; font-size: 3rem;">
-                    🎵
+        </div>
+
+        {% if user and user.user_id == playlist.user_id %}
+        <div class="card p-3 mb-4 bg-light border">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">歌單設定</h6>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="privacy-toggle" {% if playlist.is_public
+                        %}checked{% endif %}>
+                    <label class="form-check-label" for="privacy-toggle" id="privacy-status">
+                        狀態: {% if playlist.is_public %}公開{% else %}私密{% endif %}
+                    </label>
                 </div>
             </div>
-            <div>
-                <h1 class="display-5 fw-bold">{{ playlist.title }}</h1>
-                <p class="lead text-muted">由 {{ playlist.user.username if playlist.user else '未知作者' }} 建立</p>
-                <p>{{ playlist.songs|length }} 首歌曲</p>
+            <div class="form-text mt-1">
+                公開的歌單會顯示在首頁，所有人都可以搜尋到。
             </div>
         </div>
+        {% endif %}
 
         <hr>
 
-        <ul class="list-group list-group-flush">
+        <ul class="list-group list-group-flush {% if user and user.user_id == playlist.user_id %}sortable-list{% endif %}"
+            id="playlist-songs-list">
             {% for song in playlist.songs %}
             <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center playable-song"
-                style="cursor: pointer;" data-file-url="{{ song.file_url }}" data-title="{{ song.title }}"
-                data-artist="{{ song.user.username if song.user else '未知作者' }}">
+                style="cursor: pointer;" data-song-id="{{ song.song_id }}" data-file-url="{{ song.file_url }}"
+                data-title="{{ song.title }}" data-artist="{{ song.user.username if song.user else '未知作者' }}">
                 <div>
-                    <div class="fw-bold">{{ song.title }}</div>
+                    <span class="text-muted me-3">#{{ loop.index }}</span>
+                    <span class="fw-bold">{{ song.title }}</span> -
                     <small class="text-muted">{{ song.user.username if song.user else '未知作者' }}</small>
                 </div>
                 <span class="text-muted">{{ "%02d:%02d"|format(song.duration // 60, song.duration % 60) }}</span>
@@ -92,6 +115,9 @@
             <li class="list-group-item">這個播放清單目前沒有歌曲。</li>
             {% endfor %}
         </ul>
+        {% if user and user.user_id == playlist.user_id %}
+        <div class="form-text mt-2">您可以拖曳歌曲來調整順序。</div>
+        {% endif %}
     </div>
 
     <div style="height: 120px;"></div>
@@ -108,6 +134,7 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const audioPlayer = document.getElementById('audio-player');
@@ -149,7 +176,7 @@
                 }
             });
 
-            // 【新功能】監聽 audio 播放器的 'ended' 事件
+            // 【功能】監聽 audio 播放器的 'ended' 事件
             audioPlayer.addEventListener('ended', function () {
                 const currentSong = document.querySelector('.list-group-item.playing');
 
@@ -168,6 +195,81 @@
                     }
                 }
             });
+
+            // --- 【功能】處理拖曳排序功能 ---
+            const sortableList = document.getElementById('playlist-songs-list');
+
+            // 檢查 sortableList 是否存在 (也就是使用者是否為擁有者)
+            if (sortableList && sortableList.classList.contains('sortable-list')) {
+                new Sortable(sortableList, {
+                    animation: 150, // 動畫效果
+                    ghostClass: 'sortable-ghost', // 拖曳時佔位符的 class
+                    // 當拖曳結束時觸發
+                    onEnd: async function (evt) {
+                        // 從 DOM 獲取所有 li 元素，並讀取他們的 data-song-id
+                        const items = sortableList.querySelectorAll('li.playable-song');
+                        const songIds = Array.from(items).map(item => item.dataset.songId);
+
+                        // 發送 API 請求到後端
+                        try {
+                            const response = await fetch(`/playlists/api/{{ playlist.playlist_id }}/reorder`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ song_ids: songIds })
+                            });
+
+                            const result = await response.json();
+                            if (!response.ok) {
+                                alert(`儲存順序失敗: ${result.error}`);
+                            } else {
+                                // 可選：顯示一個短暫的成功提示
+                                console.log(result.message);
+                                // 重新編號
+                                items.forEach((item, index) => {
+                                    item.querySelector('.me-3').textContent = `#${index + 1}`;
+                                });
+                            }
+                        } catch (error) {
+                            alert('網路錯誤，無法儲存順序。');
+                        }
+                    }
+                });
+            }
+
+            // --- 【功能】處理隱私狀態切換功能 ---
+            const privacyToggle = document.getElementById('privacy-toggle');
+            const privacyStatusLabel = document.getElementById('privacy-status');
+
+            // 只有當開關存在時 (即使用者為擁有者時) 才新增監聽器
+            if (privacyToggle) {
+                privacyToggle.addEventListener('change', async function (event) {
+                    const isChecked = event.target.checked; // true 代表公開, false 代表私密
+
+                    try {
+                        const response = await fetch(`/playlists/api/{{ playlist.playlist_id }}/set-privacy`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ is_public: isChecked })
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok && result.success) {
+                            // 更新 UI 上的文字標籤
+                            privacyStatusLabel.textContent = `狀態: ${result.is_public ? '公開' : '私密'}`;
+                            // 你可以在這裡加入一個短暫的 "已儲存" 提示
+                        } else {
+                            // 如果失敗，將開關恢復原狀
+                            event.target.checked = !isChecked;
+                            alert(`錯誤: ${result.error || '無法更新狀態'}`);
+                        }
+                    } catch (error) {
+                        // 網路等其他錯誤，也恢復開關原狀
+                        event.target.checked = !isChecked;
+                        alert('發生網路錯誤，請稍後再試。');
+                    }
+                });
+            }
         });
     </script>
 </body>
