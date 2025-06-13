@@ -13,7 +13,7 @@
     先 `cd` 到你要儲存專案的位置，然後執行：
     ```bash
     git clone https://github.com/ChengYi0224/MusicDB_Project.git
-    cd MUSICDB_PROJECT
+    cd MusicDB_Project
     ```
 
 2.  **建立並啟用虛擬環境 (Virtual Environment)**
@@ -21,7 +21,7 @@
     為了避免專案之間的套件版本衝突，強烈建議使用虛擬環境來隔離本專案的依賴套件。
 
     **a. 建立虛擬環境**
-    在專案根目錄 (`MUSICDB_PROJECT/`) 下執行以下指令，建立一個名為 `venv` 的虛擬環境資料夾：
+    在專案根目錄 (`MMusicDB_Project/`) 下執行以下指令，建立一個名為 `venv` 的虛擬環境資料夾：
     ```bash
     py -m venv venv
     ```
